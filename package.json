@@ -1,12 +1,16 @@
 {
   "name": "phygital-smart-contract",
   "version": "1.0.0",
+  "private": true,
   "description": "Smart contract for realizing phygitals in a simple but efficient way.",
   "main": "index.js",
   "scripts": {
-    "run": "npx hardhat run scripts/deploy.ts",
+    "run": "npx hardhat run",
     "test": "REPORT_GAS=true npx hardhat test",
-    "node": "npx hardhat node"
+    "node": "npx hardhat node",
+    "compile": "npx hardhat compile",
+    "deploy-localhost": "npx hardhat run --network localhost scripts/deploy.ts",
+    "deploy-lukso": "npx hardhat run --network lukso scripts/deploy-lukso.ts"
   },
   "keywords": [
     "lukso",
@@ -15,8 +19,20 @@
     "smart contract"
   ],
   "author": "Dennis Tuszynski",
+  "license": "Apache-2.0",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "hardhat": "^2.18.3"
+    "@openzeppelin/hardhat-upgrades": "^2.3.3",
+    "hardhat": "^2.18.3",
+    "hardhat-deploy": "^0.11.43",
+    "hardhat-contract-sizer": "^2.10.0",
+    "mocha": "^10.2.0"
+  },
+  "dependencies": {
+    "@erc725/erc725.js": "^0.20.1",
+    "@erc725/smart-contracts": "^6.0.0",
+    "@lukso/lsp-factory.js": "^3.1.1",
+    "@lukso/lsp-smart-contracts": "^0.12.0",
+    "@openzeppelin/contracts": "^5.0.0"
   }
 }
