@@ -1,14 +1,14 @@
 import { MerkleTree } from "merkletreejs";
-import { solidityPackedKeccak256 } from "ethers";
 import listOfKeyPairs from "./key-pairs";
+import { keccak256 } from "./util";
 
 const listOfPublicKeys = listOfKeyPairs.map((keyPair) => keyPair.publicKey);
 
-const keccak256 = (publicKey: string) =>
-  solidityPackedKeccak256(["address"], [publicKey]);
-
 const createMerkleTree = (listOfPublicKeys: string[]) =>
-  new MerkleTree(listOfPublicKeys.map(keccak256), keccak256);
+  new MerkleTree(
+    listOfPublicKeys.map(keccak256("address")),
+    keccak256("bytes")
+  );
 
 const merkleTree = createMerkleTree(listOfPublicKeys);
 
