@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
 import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection} from "./PhygitalAssetError.sol";
+import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
 
 /**
  * @title Phygital Asset Implementation.
@@ -14,22 +15,36 @@ import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollec
  * @dev Contract module represents a phygital asset.
  */
 contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
-    bytes32 public _merkleRootOfCollection;
+    bytes32 public merkleRootOfCollection;
 
+    /**
+     * @notice Constructs a phygital asset
+     *
+     * @param merkleRootOfCollection_ root of the merkle tree which represents the phygital asset collection
+     * @param merkleTreeJSONURL_ url pointing to the json containing the merkle tree
+     * @param name_ name of the phygital asset
+     * @param symbol_ symbol of the phygital asset
+     * @param collectionOwner_ address of the collection owner
+     */
     constructor(
-        bytes32 merkleRootOfCollection, // root of the merkle tree which represents the phygital asset collection
-        string memory name,
-        string memory symbol,
-        address collectionOwner
+        bytes32 merkleRootOfCollection_,
+        bytes memory merkleTreeJSONURL_,
+        string memory name_,
+        string memory symbol_,
+        address collectionOwner_
     )
         LSP8IdentifiableDigitalAsset(
-            name,
-            symbol,
-            collectionOwner,
+            name_,
+            symbol_,
+            collectionOwner_,
             _LSP8_TOKENID_TYPE_HASH
         )
     {
-        _merkleRootOfCollection = merkleRootOfCollection;
+        merkleRootOfCollection = merkleRootOfCollection_;
+        _setData(
+            _PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY,
+            merkleTreeJSONURL_
+        );
     }
 
     /**
@@ -156,6 +171,6 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
             _phygitalIndex = _phygitalIndex / 2;
         }
 
-        return hash == _merkleRootOfCollection;
+        return hash == merkleRootOfCollection;
     }
 }
