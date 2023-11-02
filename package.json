@@ -1,0 +1,14 @@
+{
+  "name": "phygital-smart-contract",
+  "version": "1.0.0",
+  "description": "Smart contract for realizing phygitals in a simple but efficient way.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dennis Tuszynski",
+  "devDependencies": {
+    "hardhat": "^2.18.3"
+  }
+}
