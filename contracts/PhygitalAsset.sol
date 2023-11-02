@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
+import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection} from "./PhygitalAssetError.sol";
 
 /**
@@ -20,7 +21,14 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
         string memory name,
         string memory symbol,
         address collectionOwner
-    ) LSP8IdentifiableDigitalAsset(name, symbol, collectionOwner, 3) {
+    )
+        LSP8IdentifiableDigitalAsset(
+            name,
+            symbol,
+            collectionOwner,
+            _LSP8_TOKENID_TYPE_HASH
+        )
+    {
         _merkleRootOfCollection = merkleRootOfCollection;
     }
 
