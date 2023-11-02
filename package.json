@@ -4,11 +4,19 @@
   "description": "Smart contract for realizing phygitals in a simple but efficient way.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "npx hardhat run scripts/deploy.ts",
+    "test": "REPORT_GAS=true npx hardhat test",
+    "node": "npx hardhat node"
   },
-  "keywords": [],
+  "keywords": [
+    "lukso",
+    "phygital",
+    "nft",
+    "smart contract"
+  ],
   "author": "Dennis Tuszynski",
   "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
     "hardhat": "^2.18.3"
   }
 }
