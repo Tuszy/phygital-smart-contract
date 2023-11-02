@@ -22,7 +22,7 @@ export const publicKeyList = [
   "0xbDA5747bFD65F08deb54cb465eB87D40e51B197E",
 ];
 
-export const lsp2JSONURL = getLSP2JSONURL(publicKeyList, ipfsURL);
+export const merkleTreeLSP2JSONURL = getLSP2JSONURL(publicKeyList, ipfsURL);
 
 export const createMerkleTree = (publicKeyList: string[]) =>
   new MerkleTree(publicKeyList.map(keccak256("address")), keccak256("bytes"));

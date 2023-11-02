@@ -1,7 +1,7 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { lsp2JSONURL } from "../test-data/merkle-tree";
+import { merkleTreeLSP2JSONURL } from "../test-data/merkle-tree";
 
 import { merkleTreeRoot } from "../test-data/merkle-tree";
 
@@ -25,7 +25,7 @@ describe("PhygitalAsset", function () {
     const phygitalAssetName = "Sneaker";
     const phygitalAssetSymbol = "SNKR";
 
-    const phygitalCollectionMerkleTreeJSONURL = lsp2JSONURL;
+    const phygitalCollectionMerkleTreeJSONURL = merkleTreeLSP2JSONURL;
 
     const PhygitalAsset = await ethers.getContractFactory("PhygitalAsset");
     const phygitalAsset = await PhygitalAsset.deploy(
