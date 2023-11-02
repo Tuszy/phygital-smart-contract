@@ -1,10 +1,9 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { ipfsURL, publicKeyList } from "../test-data/public-key-list";
+import { lsp2JSONURL } from "../test-data/merkle-tree";
 
-import merkleTree from "../test-data/merkle-tree";
-import { getLSP2JSONURL } from "../test-data/util";
+import { merkleTreeRoot } from "../test-data/merkle-tree";
 
 // see schemas/PhygitalAsset.json
 const PhygitalAssetCollectionMerkleTreeURI =
@@ -21,15 +20,12 @@ describe("PhygitalAsset", function () {
   async function deployFixture() {
     const [collectionOwner, phygitalOwner] = await ethers.getSigners();
 
-    const merkleRootOfCollection = "0x" + merkleTree.getRoot().toString("hex");
+    const merkleRootOfCollection = merkleTreeRoot;
 
     const phygitalAssetName = "Sneaker";
     const phygitalAssetSymbol = "SNKR";
 
-    const phygitalCollectionMerkleTreeJSONURL = getLSP2JSONURL(
-      publicKeyList,
-      ipfsURL
-    );
+    const phygitalCollectionMerkleTreeJSONURL = lsp2JSONURL;
 
     const PhygitalAsset = await ethers.getContractFactory("PhygitalAsset");
     const phygitalAsset = await PhygitalAsset.deploy(
