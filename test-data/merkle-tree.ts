@@ -1,5 +1,7 @@
+import { Wallet } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { getLSP2JSONURL, keccak256 } from "./util";
+import keyPairs from "./key-pairs";
 
 export const ipfsURL = "ipfs://QmXGywSvgx6SJkvR5CqHjTenFUzmm1gh4ASwWDSyQyFNdZ";
 
@@ -30,3 +32,26 @@ export const createMerkleTree = (publicKeyList: string[]) =>
 export const merkleTree = createMerkleTree(publicKeyList);
 
 export const merkleTreeRoot = "0x" + merkleTree.getRoot().toString("hex");
+
+export const getMintDataForPhygital = (
+  phygitalIndex: number,
+  phygitalOwnerAddress: String
+) => {
+  const hashedPhygitalOwnerAddress = keccak256("address")(phygitalOwnerAddress);
+  const phygitalKeyPair = keyPairs[phygitalIndex];
+  const phygitalAddress = phygitalKeyPair.publicKey;
+  const hashedPhygitalAddress = keccak256("address")(phygitalAddress);
+  const phygitalWallet = new Wallet(phygitalKeyPair.privateKey);
+  const phygitalSignature = phygitalWallet.signingKey.sign(
+    hashedPhygitalOwnerAddress
+  ).serialized;
+  const merkleProof = merkleTree
+    .getProof(hashedPhygitalAddress)
+    .map((node) => node.data);
+
+  return {
+    phygitalAddress,
+    phygitalSignature,
+    merkleProof,
+  };
+};

@@ -1,7 +1,10 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { merkleTreeLSP2JSONURL } from "../test-data/merkle-tree";
+import {
+  getMintDataForPhygital,
+  merkleTreeLSP2JSONURL,
+} from "../test-data/merkle-tree";
 
 import { merkleTreeRoot } from "../test-data/merkle-tree";
 
@@ -104,18 +107,138 @@ describe("PhygitalAsset", function () {
     });
   });
 
-  /*describe("Withdrawals", function () {
+  describe("function mint(address phygitalOwner, address phygitalAddress, uint phygitalIndex, bytes memory phygitalSignature, bytes32[] memory merkleProofOfCollection, bool force) public", function () {
     describe("Validations", function () {
-      it("Should revert with the right error if called too soon", async function () {
-        const { lock } = await loadFixture(deployOneYearLockFixture);
+      it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed if the phygital owner is invalid", async function () {
+        const { phygitalAsset, collectionOwner, phygitalOwner } =
+          await loadFixture(deployFixture);
 
-        await expect(lock.withdraw()).to.be.revertedWith(
-          "You can't withdraw yet"
+        const phygitalIndex = 0;
+        const { phygitalAddress, phygitalSignature, merkleProof } =
+          getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+
+        await expect(
+          phygitalAsset.mint(
+            collectionOwner.address,
+            phygitalAddress,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).to.be.revertedWithCustomError(
+          phygitalAsset,
+          "PhygitalAssetOwnershipVerificationFailed"
+        );
+      });
+
+      it("Should revert with the the custom error PhygitalAssetIsNotPartOfCollection if the phygital is not part of the collection (invalid merkle proof)", async function () {
+        const { phygitalAsset, phygitalOwner } = await loadFixture(
+          deployFixture
+        );
+
+        const phygitalIndex = 0;
+        const { phygitalAddress, phygitalSignature, merkleProof } =
+          getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+
+        await expect(
+          phygitalAsset.mint(
+            phygitalOwner.address,
+            phygitalAddress,
+            phygitalIndex + 1,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).to.be.revertedWithCustomError(
+          phygitalAsset,
+          "PhygitalAssetIsNotPartOfCollection"
+        );
+      });
+
+      it("Should revert with the the custom error PhygitalAssetIsNotPartOfCollection if the phygital owner is not a universal profile and force is set to false", async function () {
+        const { phygitalAsset, phygitalOwner } = await loadFixture(
+          deployFixture
+        );
+
+        const phygitalIndex = 0;
+        const { phygitalAddress, phygitalSignature, merkleProof } =
+          getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+
+        await expect(
+          phygitalAsset.mint(
+            phygitalOwner.address,
+            phygitalAddress,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).to.be.revertedWithCustomError(
+          phygitalAsset,
+          "LSP8NotifyTokenReceiverIsEOA"
         );
       });
     });
 
-    describe("Events", function () {
+    it("Should pass if the phygital owner is not a universal profile but force is set to true", async function () {
+      const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
+
+      const phygitalIndex = 0;
+      const { phygitalAddress, phygitalSignature, merkleProof } =
+        getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+
+      await expect(
+        phygitalAsset.mint(
+          phygitalOwner.address,
+          phygitalAddress,
+          phygitalIndex,
+          phygitalSignature,
+          merkleProof,
+          true
+        )
+      ).not.to.be.reverted;
+    });
+
+    it("Should pass if the phygital owner is a universal profile and force is set to true", async function () {
+      const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
+
+      const phygitalIndex = 0;
+      const { phygitalAddress, phygitalSignature, merkleProof } =
+        getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+
+      await expect(
+        phygitalAsset.mint(
+          phygitalOwner.address,
+          phygitalAddress,
+          phygitalIndex,
+          phygitalSignature,
+          merkleProof,
+          true
+        )
+      ).not.to.be.reverted;
+    });
+
+    it("Should pass if the phygital owner is a universal profile and force is set to false", async function () {
+      const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
+
+      const phygitalIndex = 0;
+      const { phygitalAddress, phygitalSignature, merkleProof } =
+        getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+
+      await expect(
+        phygitalAsset.mint(
+          phygitalOwner.address,
+          phygitalAddress,
+          phygitalIndex,
+          phygitalSignature,
+          merkleProof,
+          false
+        )
+      ).not.to.be.reverted;
+    });
+
+    /*describe("Events", function () {
       it("Should emit an event on withdrawals", async function () {
         const { lock, unlockTime, lockedAmount } = await loadFixture(
           deployOneYearLockFixture
@@ -127,6 +250,6 @@ describe("PhygitalAsset", function () {
           .to.emit(lock, "Withdrawal")
           .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
       });
-    });
-  });*/
+    });*/
+  });
 });
