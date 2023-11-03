@@ -35,7 +35,7 @@ export const merkleTreeRoot = "0x" + merkleTree.getRoot().toString("hex");
 
 export const getMintDataForPhygital = (
   phygitalIndex: number,
-  phygitalOwnerAddress: String
+  phygitalOwnerAddress: string
 ) => {
   const hashedPhygitalOwnerAddress = keccak256("address")(phygitalOwnerAddress);
   const phygitalKeyPair = keyPairs[phygitalIndex];
