@@ -7,6 +7,7 @@ import {
 } from "../test-data/merkle-tree";
 
 import { merkleTreeRoot } from "../test-data/merkle-tree";
+import { getOwnerAndUniversalProfiles } from "../test-data/universal-profile";
 
 // see schemas/PhygitalAsset.json
 const PhygitalAssetCollectionMerkleTreeURI =
@@ -21,7 +22,7 @@ const LSP8TokenIdTypeHash = 3;
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
-    const [collectionOwner, phygitalOwner] = await ethers.getSigners();
+    const [owner] = await ethers.getSigners();
 
     const merkleRootOfCollection = merkleTreeRoot;
 
@@ -36,7 +37,11 @@ describe("PhygitalAsset", function () {
       phygitalCollectionMerkleTreeJSONURL,
       phygitalAssetName,
       phygitalAssetSymbol,
-      collectionOwner.address
+      owner.address
+    );
+
+    const [collectionOwner, phygitalOwner] = await getOwnerAndUniversalProfiles(
+      phygitalAsset
     );
 
     return {
@@ -103,7 +108,9 @@ describe("PhygitalAsset", function () {
         deployFixture
       );
 
-      expect(await phygitalAsset.owner()).to.equal(collectionOwner.address);
+      expect(await phygitalAsset.owner()).to.equal(
+        collectionOwner.universalProfileOwner.address
+      );
     });
   });
 
@@ -115,11 +122,14 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalAddress, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+          getMintDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileOwner.address
+          );
 
         await expect(
           phygitalAsset.mint(
-            collectionOwner.address,
+            collectionOwner.universalProfileOwner.address,
             phygitalAddress,
             phygitalIndex,
             phygitalSignature,
@@ -139,11 +149,14 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalAddress, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+          getMintDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileOwner.address
+          );
 
         await expect(
           phygitalAsset.mint(
-            phygitalOwner.address,
+            phygitalOwner.universalProfileOwner.address,
             phygitalAddress,
             phygitalIndex + 1,
             phygitalSignature,
@@ -163,11 +176,14 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalAddress, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+          getMintDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileOwner.address
+          );
 
         await expect(
           phygitalAsset.mint(
-            phygitalOwner.address,
+            phygitalOwner.universalProfileOwner.address,
             phygitalAddress,
             phygitalIndex,
             phygitalSignature,
@@ -186,11 +202,14 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalAddress, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+        getMintDataForPhygital(
+          phygitalIndex,
+          phygitalOwner.universalProfileOwner.address
+        );
 
       await expect(
         phygitalAsset.mint(
-          phygitalOwner.address,
+          phygitalOwner.universalProfileOwner.address,
           phygitalAddress,
           phygitalIndex,
           phygitalSignature,
@@ -205,11 +224,14 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalAddress, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+        getMintDataForPhygital(
+          phygitalIndex,
+          phygitalOwner.universalProfileOwner.address
+        );
 
       await expect(
         phygitalAsset.mint(
-          phygitalOwner.address,
+          phygitalOwner.universalProfileOwner.address,
           phygitalAddress,
           phygitalIndex,
           phygitalSignature,
@@ -224,11 +246,14 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalAddress, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(phygitalIndex, phygitalOwner.address);
+        getMintDataForPhygital(
+          phygitalIndex,
+          phygitalOwner.universalProfileAddress
+        );
 
       await expect(
         phygitalAsset.mint(
-          phygitalOwner.address,
+          phygitalOwner.universalProfileAddress,
           phygitalAddress,
           phygitalIndex,
           phygitalSignature,
