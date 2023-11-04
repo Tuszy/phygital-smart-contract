@@ -59,26 +59,25 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
     /**
      * @notice Minting a phygital from the collection. Phygital id equals to the hash of the phygital address.
      *
-     * @param phygitalAddress The address of the phygital to mint. (public key of nfc tag or qr code)
+     * @param phygitalId The id of the phygital to mint. (keccak256 hashed public key of nfc tag or qr code)
      * @param phygitalIndex The index of the phygital to mint.
      * @param phygitalSignature Signature sent alongside the minting to prove the ownership of the phygital.
      * @param merkleProofOfCollection Merkle proof sent alongside the minting to check whether the phygital is part of the given collection.
      * @param force Set to `false` to ensure that you are minting for a recipient that implements LSP1, `false` otherwise for forcing the minting.
      */
     function mint(
-        address phygitalAddress,
+        bytes32 phygitalId,
         uint phygitalIndex,
         bytes memory phygitalSignature,
         bytes32[] memory merkleProofOfCollection,
         bool force
     ) public {
-        bytes32 phygitalId = keccak256(abi.encodePacked(phygitalAddress));
         address phygitalOwner = msg.sender;
 
         if (
             !_verifyPhygitalOwnership(
                 phygitalOwner,
-                phygitalAddress,
+                phygitalId,
                 phygitalSignature
             )
         ) {
@@ -90,7 +89,7 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
         if (
             !_isPhygitalPartOfCollection(
                 merkleProofOfCollection,
-                phygitalAddress,
+                phygitalId,
                 phygitalIndex
             )
         ) {
@@ -107,18 +106,26 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
      * @notice Verifies the ownership of the phygital by recovering the signer from the signature
      *
      * @param _phygitalOwner address of the phygital owner
-     * @param _phygitalAddress address of the phygital (public key of the nfc tag or qr code)
+     * @param _phygitalId id of the phygital (keccak256 hashed public key of nfc tag or qr code)
      * @param _phygitalSignature signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
      */
     function _verifyPhygitalOwnership(
         address _phygitalOwner,
-        address _phygitalAddress,
+        bytes32 _phygitalId,
         bytes memory _phygitalSignature
     ) public pure returns (bool) {
-        bytes32 hashedAddress = keccak256(abi.encodePacked(_phygitalOwner));
+        bytes32 hashedPhygitalOwnerAddress = keccak256(
+            abi.encodePacked(_phygitalOwner)
+        );
         return
-            _recoverSigner(hashedAddress, _phygitalSignature) ==
-            _phygitalAddress;
+            keccak256(
+                abi.encodePacked(
+                    _recoverSigner(
+                        hashedPhygitalOwnerAddress,
+                        _phygitalSignature
+                    )
+                )
+            ) == _phygitalId;
     }
 
     /**
@@ -158,15 +165,15 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
      * @notice Checks if the given phygital is part of the collection
      *
      * @param _merkleProofOfCollection merkle proof for the phygital in the merkle tree (= collection)
-     * @param _phygitalAddress address of the phygital (public key of the nfc tag or qr code)
+     * @param _phygitalId id of the phygital (keccak256 hashed public key of nfc tag or qr code)
      * @param _phygitalIndex index of the phygital address in the merkle tree (= collection)
      */
     function _isPhygitalPartOfCollection(
         bytes32[] memory _merkleProofOfCollection,
-        address _phygitalAddress,
+        bytes32 _phygitalId,
         uint _phygitalIndex
     ) public view returns (bool) {
-        bytes32 hash = keccak256(abi.encodePacked(_phygitalAddress));
+        bytes32 hash = _phygitalId;
 
         for (uint i = 0; i < _merkleProofOfCollection.length; i++) {
             bytes32 proofElement = _merkleProofOfCollection[i];

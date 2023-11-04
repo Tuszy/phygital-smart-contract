@@ -50,7 +50,7 @@ export const createUniversalProfile = async (
   };
 
   const mint = async (
-    phygitalAddress: AddressLike,
+    phygitalId: BytesLike,
     phygitalIndex: BigNumberish,
     phygitalSignature: BytesLike,
     merkleProofOfCollection: BytesLike[],
@@ -58,7 +58,7 @@ export const createUniversalProfile = async (
   ) =>
     await executeCallThroughKeyManager(
       "mint",
-      phygitalAddress,
+      phygitalId,
       phygitalIndex,
       phygitalSignature,
       merkleProofOfCollection,

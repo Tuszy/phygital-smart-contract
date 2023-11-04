@@ -49,7 +49,6 @@ export const getMintDataForPhygital = (
 
   return {
     phygitalId,
-    phygitalAddress,
     phygitalSignature,
     merkleProof,
   };
