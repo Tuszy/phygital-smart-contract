@@ -116,7 +116,35 @@ describe("PhygitalAsset", function () {
 
   describe("function mint(address phygitalOwner, address phygitalAddress, uint phygitalIndex, bytes memory phygitalSignature, bytes32[] memory merkleProofOfCollection, bool force) public", function () {
     describe("Validations", function () {
-      it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed if the phygital owner is invalid", async function () {
+      it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed if the msg.sender (EOA) is not the phygital owner", async function () {
+        const { phygitalAsset, phygitalOwner } = await loadFixture(
+          deployFixture
+        );
+
+        const phygitalIndex = 0;
+        const { phygitalAddress, phygitalSignature, merkleProof } =
+          getMintDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileAddress
+          );
+
+        await expect(
+          phygitalAsset
+            .connect(phygitalOwner.universalProfileOwner)
+            .mint(
+              phygitalAddress,
+              phygitalIndex,
+              phygitalSignature,
+              merkleProof,
+              false
+            )
+        ).to.be.revertedWithCustomError(
+          phygitalAsset,
+          "PhygitalAssetOwnershipVerificationFailed"
+        );
+      });
+
+      it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed  if the msg.sender (universal profile) is not the phygital owner", async function () {
         const { phygitalAsset, collectionOwner, phygitalOwner } =
           await loadFixture(deployFixture);
 
@@ -124,11 +152,11 @@ describe("PhygitalAsset", function () {
         const { phygitalAddress, phygitalSignature, merkleProof } =
           getMintDataForPhygital(
             phygitalIndex,
-            phygitalOwner.universalProfileOwner.address
+            phygitalOwner.universalProfileAddress
           );
 
         await expect(
-          phygitalAsset.mint(
+          collectionOwner.mint(
             phygitalAddress,
             phygitalIndex,
             phygitalSignature,
@@ -150,26 +178,24 @@ describe("PhygitalAsset", function () {
         const { phygitalAddress, phygitalSignature, merkleProof } =
           getMintDataForPhygital(
             phygitalIndex,
-            phygitalOwner.universalProfileOwner.address
+            phygitalOwner.universalProfileAddress
           );
 
         await expect(
-          phygitalAsset
-            .connect(phygitalOwner.universalProfileOwner)
-            .mint(
-              phygitalAddress,
-              phygitalIndex + 1,
-              phygitalSignature,
-              merkleProof,
-              false
-            )
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalIndex + 1,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).to.be.revertedWithCustomError(
           phygitalAsset,
           "PhygitalAssetIsNotPartOfCollection"
         );
       });
 
-      it("Should revert with the the custom error PhygitalAssetIsNotPartOfCollection if the phygital owner is not a universal profile and force is set to false", async function () {
+      it("Should revert with the the custom error LSP8NotifyTokenReceiverIsEOA if the phygital owner is not a universal profile and force is set to false", async function () {
         const { phygitalAsset, phygitalOwner } = await loadFixture(
           deployFixture
         );
@@ -222,31 +248,48 @@ describe("PhygitalAsset", function () {
     });
 
     it("Should pass if the phygital owner is a universal profile and force is set to true", async function () {
-      const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
+      const { phygitalOwner } = await loadFixture(deployFixture);
 
       const phygitalIndex = 0;
       const { phygitalAddress, phygitalSignature, merkleProof } =
         getMintDataForPhygital(
           phygitalIndex,
-          phygitalOwner.universalProfileOwner.address
+          phygitalOwner.universalProfileAddress
         );
 
-      phygitalAsset.connect(phygitalOwner.universalProfileOwner);
-
       await expect(
-        phygitalAsset
-          .connect(phygitalOwner.universalProfileOwner)
-          .mint(
-            phygitalAddress,
-            phygitalIndex,
-            phygitalSignature,
-            merkleProof,
-            true
-          )
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalIndex,
+          phygitalSignature,
+          merkleProof,
+          true
+        )
       ).not.to.be.reverted;
     });
 
     it("Should pass if the phygital owner is a universal profile and force is set to false", async function () {
+      const { phygitalOwner } = await loadFixture(deployFixture);
+
+      const phygitalIndex = 0;
+      const { phygitalAddress, phygitalSignature, merkleProof } =
+        getMintDataForPhygital(
+          phygitalIndex,
+          phygitalOwner.universalProfileAddress
+        );
+
+      await expect(
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalIndex,
+          phygitalSignature,
+          merkleProof,
+          false
+        )
+      ).not.to.be.reverted;
+    });
+
+    it("Should revert with the the custom error LSP8TokenIdAlreadyMinted if the phygital has already been minted", async function () {
       const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
 
       const phygitalIndex = 0;
@@ -265,6 +308,19 @@ describe("PhygitalAsset", function () {
           false
         )
       ).not.to.be.reverted;
+
+      await expect(
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalIndex,
+          phygitalSignature,
+          merkleProof,
+          false
+        )
+      ).to.be.revertedWithCustomError(
+        phygitalAsset,
+        "LSP8TokenIdAlreadyMinted"
+      );
     });
 
     /*describe("Events", function () {
