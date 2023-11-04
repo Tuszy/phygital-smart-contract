@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
+import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
 import {LSP8NotTokenOwner} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
-import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
+import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} from "./PhygitalAssetConstants.sol";
 
 /**
  * @title Phygital Asset Collection Implementation.
- * The phygital is represented by an asymmetric key pair and an index which is equal to the position in the merkle tree (= collection).
- * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership during minting.
+ * A phygital asset is represented by an asymmetric key pair and an index which is equal to the position in the merkle tree (= collection).
+ * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership (e.g. during minting).
  * The id of the phygital results form the keccak256 hash of the public key (= phygital address).
  * @author Dennis Tuszynski
- * @dev Contract module represents a phygital asset.
+ * @dev Contract module represents a phygital asset collection.
  */
 contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
     /**
@@ -28,7 +29,7 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
     mapping(bytes32 => bool) public verifiedOwnership;
 
     /**
-     * @notice Constructs a phygital asset
+     * @notice Constructs a phygital asset collection
      *
      * @param merkleRootOfCollection_ root of the merkle tree which represents the phygital asset collection
      * @param merkleTreeJSONURL_ url pointing to the json containing the merkle tree
@@ -269,5 +270,22 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
         bytes memory /*data*/
     ) internal override {
         verifiedOwnership[phygitalId] = phygitalOwner == address(0);
+    }
+
+    /**
+     * @inheritdoc IERC165
+     */
+    function supportsInterface(
+        bytes4 interfaceId
+    )
+        public
+        view
+        virtual
+        override(LSP8IdentifiableDigitalAsset)
+        returns (bool)
+    {
+        return
+            interfaceId == _INTERFACEID_PHYGITAL_ASSET_COLLECTION ||
+            super.supportsInterface(interfaceId);
     }
 }

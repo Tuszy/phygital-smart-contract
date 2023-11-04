@@ -3,6 +3,8 @@ import {
   dataSlice,
   toUtf8Bytes,
   hexlify,
+  Interface,
+  toBigInt,
 } from "ethers";
 
 export const keccak256 = (type: string) => (data: any) =>
@@ -24,4 +26,12 @@ export const getLSP2JSONURL = (json: Object, ipfsURL: string): string => {
   const jsonURL = hashFunction + hashedJSON + hexlifiedIpfsURL;
 
   return jsonURL;
+};
+
+export const getInterfaceID = (contractInterface: Interface) => {
+  let interfaceID = toBigInt(0);
+  contractInterface.forEachFunction(
+    (func) => (interfaceID ^= toBigInt(func.selector))
+  );
+  return "0x" + interfaceID.toString(16);
 };

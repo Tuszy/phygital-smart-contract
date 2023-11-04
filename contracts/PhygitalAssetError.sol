@@ -29,3 +29,25 @@ error PhygitalAssetHasAlreadyAVerifiedOwnership(
     address owner,
     bytes32 phygitalId
 );
+
+/**
+ * @dev Reverts when sender address is not of type PhygitalAssetCollection
+ */
+error SenderNotOfTypePhygitalAssetCollection(address senderAddress);
+
+/**
+ * @dev Reverts when sender address is unequal to the expected phygital asset collection address
+ */
+error NotContainingPhygitalAssetCollection(
+    address senderAddress,
+    address phygitalAssetCollectionAddress
+);
+
+/**
+ * @dev Reverts when sender address is neither the phygital asset collection address nor the phygital owner address
+ */
+error SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner(
+    address senderAddress,
+    address phygitalAssetCollectionAddress,
+    address phygitalAssetOwnerAddress
+);

@@ -9,7 +9,18 @@ import type { HardhatEthersSigner } from "../node_modules/@nomicfoundation/hardh
 import { abi as LSP0ERC725AccountABI } from "@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json";
 import { abi as LSP6KeyManagerABI } from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
 import { abi as PhygitalAssetCollectionABI } from "../artifacts/contracts/PhygitalAssetCollection.sol/PhygitalAssetCollection.json";
+import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
 import { PhygitalAsset } from "../typechain-types";
+import { getInterfaceID } from "./util";
+
+console.log(
+  "PhygitalAssetCollection ERC165 Interface ID:",
+  getInterfaceID(new ethers.Interface(PhygitalAssetCollectionABI))
+);
+console.log(
+  "PhygitalAsset ERC165 Interface ID:",
+  getInterfaceID(new ethers.Interface(PhygitalAssetABI))
+);
 
 export const createUniversalProfile = async (
   universalProfileOwner: HardhatEthersSigner,
