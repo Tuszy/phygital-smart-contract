@@ -8,14 +8,14 @@ import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollec
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
 
 /**
- * @title Phygital Asset Implementation.
+ * @title Phygital Asset Collection Implementation.
  * The phygital is represented by an asymmetric key pair and an index which is equal to the position in the merkle tree (= collection).
  * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership during minting.
  * The id of the phygital results form the keccak256 hash of the public key (= phygital address).
  * @author Dennis Tuszynski
  * @dev Contract module represents a phygital asset.
  */
-contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
+contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
     /**
      * @notice Root of the merkle tree which represents the phygital asset collection
      */

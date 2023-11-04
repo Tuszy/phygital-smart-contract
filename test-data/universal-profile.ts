@@ -8,7 +8,7 @@ import type { HardhatEthersSigner } from "../node_modules/@nomicfoundation/hardh
 // ABI
 import { abi as LSP0ERC725AccountABI } from "@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json";
 import { abi as LSP6KeyManagerABI } from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
-import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
+import { abi as PhygitalAssetCollectionABI } from "../artifacts/contracts/PhygitalAssetCollection.sol/PhygitalAssetCollection.json";
 import { PhygitalAsset } from "../typechain-types";
 
 export const createUniversalProfile = async (
@@ -22,7 +22,9 @@ export const createUniversalProfile = async (
 
   const universalProfileAddress = universalProfile.LSP0ERC725Account.address;
 
-  const PhygitalAssetInterface = new ethers.Interface(PhygitalAssetABI);
+  const PhygitalAssetInterface = new ethers.Interface(
+    PhygitalAssetCollectionABI
+  );
   const LSP0ERC725AccountABIInterface = new ethers.Interface(
     LSP0ERC725AccountABI
   );
