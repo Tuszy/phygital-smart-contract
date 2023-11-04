@@ -129,7 +129,6 @@ describe("PhygitalAsset", function () {
 
         await expect(
           phygitalAsset.mint(
-            collectionOwner.universalProfileOwner.address,
             phygitalAddress,
             phygitalIndex,
             phygitalSignature,
@@ -155,14 +154,15 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalAsset.mint(
-            phygitalOwner.universalProfileOwner.address,
-            phygitalAddress,
-            phygitalIndex + 1,
-            phygitalSignature,
-            merkleProof,
-            false
-          )
+          phygitalAsset
+            .connect(phygitalOwner.universalProfileOwner)
+            .mint(
+              phygitalAddress,
+              phygitalIndex + 1,
+              phygitalSignature,
+              merkleProof,
+              false
+            )
         ).to.be.revertedWithCustomError(
           phygitalAsset,
           "PhygitalAssetIsNotPartOfCollection"
@@ -182,14 +182,15 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalAsset.mint(
-            phygitalOwner.universalProfileOwner.address,
-            phygitalAddress,
-            phygitalIndex,
-            phygitalSignature,
-            merkleProof,
-            false
-          )
+          phygitalAsset
+            .connect(phygitalOwner.universalProfileOwner)
+            .mint(
+              phygitalAddress,
+              phygitalIndex,
+              phygitalSignature,
+              merkleProof,
+              false
+            )
         ).to.be.revertedWithCustomError(
           phygitalAsset,
           "LSP8NotifyTokenReceiverIsEOA"
@@ -208,14 +209,15 @@ describe("PhygitalAsset", function () {
         );
 
       await expect(
-        phygitalAsset.mint(
-          phygitalOwner.universalProfileOwner.address,
-          phygitalAddress,
-          phygitalIndex,
-          phygitalSignature,
-          merkleProof,
-          true
-        )
+        phygitalAsset
+          .connect(phygitalOwner.universalProfileOwner)
+          .mint(
+            phygitalAddress,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            true
+          )
       ).not.to.be.reverted;
     });
 
@@ -229,15 +231,18 @@ describe("PhygitalAsset", function () {
           phygitalOwner.universalProfileOwner.address
         );
 
+      phygitalAsset.connect(phygitalOwner.universalProfileOwner);
+
       await expect(
-        phygitalAsset.mint(
-          phygitalOwner.universalProfileOwner.address,
-          phygitalAddress,
-          phygitalIndex,
-          phygitalSignature,
-          merkleProof,
-          true
-        )
+        phygitalAsset
+          .connect(phygitalOwner.universalProfileOwner)
+          .mint(
+            phygitalAddress,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            true
+          )
       ).not.to.be.reverted;
     });
 
@@ -252,8 +257,7 @@ describe("PhygitalAsset", function () {
         );
 
       await expect(
-        phygitalAsset.mint(
-          phygitalOwner.universalProfileAddress,
+        phygitalOwner.mint(
           phygitalAddress,
           phygitalIndex,
           phygitalSignature,

@@ -5,6 +5,7 @@ import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts
 import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
+import "hardhat/console.sol";
 
 /**
  * @title Phygital Asset Implementation.
@@ -50,7 +51,6 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
     /**
      * @notice Minting a phygital from the collection. Phygital id equals to the hash of the phygital address.
      *
-     * @param phygitalOwner The address that will receive the minted phygital.
      * @param phygitalAddress The address of the phygital to mint. (public key of nfc tag or qr code)
      * @param phygitalIndex The index of the phygital to mint.
      * @param phygitalSignature Signature sent alongside the minting to prove the ownership of the phygital.
@@ -58,13 +58,13 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
      * @param force Set to `false` to ensure that you are minting for a recipient that implements LSP1, `false` otherwise for forcing the minting.
      */
     function mint(
-        address phygitalOwner,
         address phygitalAddress,
         uint phygitalIndex,
         bytes memory phygitalSignature,
         bytes32[] memory merkleProofOfCollection,
         bool force
     ) public {
+        address phygitalOwner = msg.sender;
         if (
             !_verifyPhygitalOwnership(
                 phygitalOwner,

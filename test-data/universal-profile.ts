@@ -50,7 +50,6 @@ export const createUniversalProfile = async (
   };
 
   const mint = async (
-    phygitalOwnerAddress: AddressLike,
     phygitalAddress: AddressLike,
     phygitalIndex: BigNumberish,
     phygitalSignature: BytesLike,
@@ -59,7 +58,6 @@ export const createUniversalProfile = async (
   ) =>
     await executeCallThroughKeyManager(
       "mint",
-      phygitalOwnerAddress,
       phygitalAddress,
       phygitalIndex,
       phygitalSignature,
