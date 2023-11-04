@@ -65,12 +65,38 @@ export const createUniversalProfile = async (
       force
     );
 
+  const verifyOwnershipAfterTransfer = async (
+    phygitalId: BytesLike,
+    phygitalSignature: BytesLike
+  ) =>
+    await executeCallThroughKeyManager(
+      "verifyOwnershipAfterTransfer",
+      phygitalId,
+      phygitalSignature
+    );
+
+  const transfer = async (
+    newPhygitalOwner: AddressLike,
+    phygitalId: BytesLike,
+    force: boolean
+  ) =>
+    await executeCallThroughKeyManager(
+      "transfer",
+      universalProfileAddress,
+      newPhygitalOwner,
+      phygitalId,
+      force,
+      "0x"
+    );
+
   return {
     universalProfileOwner, // EOA (= Owner -> KeyManager -> Universal Profile)
     universalProfile, // Universal Profile contract instance
     universalProfileAddress, // Universal Profile address
     executeCallThroughKeyManager, // Universal Profile helper function for calling methods through the KeyManager
     mint,
+    transfer,
+    verifyOwnershipAfterTransfer,
   };
 };
 

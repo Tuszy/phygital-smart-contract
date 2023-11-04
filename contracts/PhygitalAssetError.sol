@@ -6,7 +6,7 @@ pragma solidity ^0.8.20;
  */
 error PhygitalAssetOwnershipVerificationFailed(
     address owner,
-    bytes32 phygitalAddress
+    bytes32 phygitalId
 );
 
 /**
@@ -14,13 +14,18 @@ error PhygitalAssetOwnershipVerificationFailed(
  */
 error PhygitalAssetIsNotPartOfCollection(
     uint phygitalIndex,
-    bytes32 phygitalAddress
+    bytes32 phygitalId
 );
 
 /**
  * @dev Reverts when trying to transfer a phygital that has an unverified ownership
  */
-error PhygitalAssetHasAnUnverifiedOwnership(
+error PhygitalAssetHasAnUnverifiedOwnership(address owner, bytes32 phygitalId);
+
+/**
+ * @dev Reverts when trying to verify a phygital with a already verified ownership
+ */
+error PhygitalAssetHasAlreadyAVerifiedOwnership(
     address owner,
-    bytes32 phygitalAddress
+    bytes32 phygitalId
 );

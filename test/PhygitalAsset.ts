@@ -3,7 +3,7 @@ import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import {
-  getMintDataForPhygital,
+  getVerificationDataForPhygital,
   merkleTreeLSP2JSONURL,
 } from "../test-data/merkle-tree";
 
@@ -124,7 +124,7 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalId, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(
+          getVerificationDataForPhygital(
             phygitalIndex,
             phygitalOwner.universalProfileAddress
           );
@@ -151,7 +151,7 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalId, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(
+          getVerificationDataForPhygital(
             phygitalIndex,
             phygitalOwner.universalProfileAddress
           );
@@ -177,7 +177,7 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalId, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(
+          getVerificationDataForPhygital(
             phygitalIndex,
             phygitalOwner.universalProfileAddress
           );
@@ -203,7 +203,7 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalId, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(
+          getVerificationDataForPhygital(
             phygitalIndex,
             phygitalOwner.universalProfileOwner.address
           );
@@ -230,7 +230,7 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalId, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(
+        getVerificationDataForPhygital(
           phygitalIndex,
           phygitalOwner.universalProfileOwner.address
         );
@@ -247,7 +247,7 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalId, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(
+        getVerificationDataForPhygital(
           phygitalIndex,
           phygitalOwner.universalProfileAddress
         );
@@ -268,7 +268,7 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalId, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(
+        getVerificationDataForPhygital(
           phygitalIndex,
           phygitalOwner.universalProfileAddress
         );
@@ -289,7 +289,7 @@ describe("PhygitalAsset", function () {
 
       const phygitalIndex = 0;
       const { phygitalId, phygitalSignature, merkleProof } =
-        getMintDataForPhygital(
+        getVerificationDataForPhygital(
           phygitalIndex,
           phygitalOwner.universalProfileAddress
         );
@@ -326,7 +326,7 @@ describe("PhygitalAsset", function () {
 
         const phygitalIndex = 0;
         const { phygitalId, phygitalSignature, merkleProof } =
-          getMintDataForPhygital(
+          getVerificationDataForPhygital(
             phygitalIndex,
             phygitalOwner.universalProfileAddress
           );
@@ -349,6 +349,134 @@ describe("PhygitalAsset", function () {
             false,
             anyValue
           );
+      });
+    });
+  });
+
+  describe(" function transfer(address from, address to, bytes32 tokenId, bool force, bytes memory data) public virtual override", function () {
+    describe("Validations", function () {
+      it("Should pass if it is the first transfer after mint", async function () {
+        const { collectionOwner, phygitalOwner } = await loadFixture(
+          deployFixture
+        );
+
+        const phygitalIndex = 0;
+        const { phygitalId, phygitalSignature, merkleProof } =
+          getVerificationDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileAddress
+          );
+
+        await expect(
+          phygitalOwner.mint(
+            phygitalId,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).not.to.be.reverted;
+
+        await expect(
+          phygitalOwner.transfer(
+            collectionOwner.universalProfileAddress,
+            phygitalId,
+            false
+          )
+        ).not.to.be.reverted;
+      });
+
+      it("Should revert with the the custom error PhygitalAssetHasAnUnverifiedOwnership if the phygital ownership is unverified", async function () {
+        const { phygitalAsset, collectionOwner, phygitalOwner } =
+          await loadFixture(deployFixture);
+
+        const phygitalIndex = 0;
+        const { phygitalId, phygitalSignature, merkleProof } =
+          getVerificationDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileAddress
+          );
+
+        await expect(
+          phygitalOwner.mint(
+            phygitalId,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).not.to.be.reverted;
+
+        await expect(
+          phygitalOwner.transfer(
+            collectionOwner.universalProfileAddress,
+            phygitalId,
+            false
+          )
+        ).not.to.be.reverted;
+
+        await expect(
+          collectionOwner.transfer(
+            phygitalOwner.universalProfileAddress,
+            phygitalId,
+            false
+          )
+        ).to.be.revertedWithCustomError(
+          phygitalAsset,
+          "PhygitalAssetHasAnUnverifiedOwnership"
+        );
+      });
+
+      it("Should pass if the ownership has been verified after a prior transfer", async function () {
+        const { collectionOwner, phygitalOwner } = await loadFixture(
+          deployFixture
+        );
+
+        const phygitalIndex = 0;
+        const { phygitalId, phygitalSignature, merkleProof } =
+          getVerificationDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileAddress
+          );
+
+        await expect(
+          phygitalOwner.mint(
+            phygitalId,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).not.to.be.reverted;
+
+        await expect(
+          phygitalOwner.transfer(
+            collectionOwner.universalProfileAddress,
+            phygitalId,
+            false
+          )
+        ).not.to.be.reverted;
+
+        const { phygitalSignature: phygitalSignature2 } =
+          getVerificationDataForPhygital(
+            phygitalIndex,
+            collectionOwner.universalProfileAddress
+          );
+
+        await expect(
+          collectionOwner.verifyOwnershipAfterTransfer(
+            phygitalId,
+            phygitalSignature2
+          )
+        ).not.to.be.reverted;
+
+        await expect(
+          collectionOwner.transfer(
+            phygitalOwner.universalProfileAddress,
+            phygitalId,
+            false
+          )
+        ).not.to.be.reverted;
       });
     });
   });

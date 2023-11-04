@@ -33,7 +33,7 @@ export const merkleTree = createMerkleTree(publicKeyList);
 
 export const merkleTreeRoot = "0x" + merkleTree.getRoot().toString("hex");
 
-export const getMintDataForPhygital = (
+export const getVerificationDataForPhygital = (
   phygitalIndex: number,
   phygitalOwnerAddress: string
 ) => {

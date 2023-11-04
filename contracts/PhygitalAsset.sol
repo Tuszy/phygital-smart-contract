@@ -2,8 +2,9 @@
 pragma solidity ^0.8.20;
 
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
+import {LSP8NotTokenOwner} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
-import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership} from "./PhygitalAssetError.sol";
+import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
 
 /**
@@ -100,6 +101,52 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
         }
 
         _mint(phygitalOwner, phygitalId, force, "");
+    }
+
+    /**
+     * @notice Tries to verify the ownership of the phygital after a transfer - on success updates the verifiedOwnership field with true.
+     *
+     * @param phygitalId id of the phygital (keccak256 hashed public key of nfc tag or qr code)
+     * @param phygitalSignature signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
+     */
+    function verifyOwnershipAfterTransfer(
+        bytes32 phygitalId,
+        bytes memory phygitalSignature
+    ) public {
+        _existsOrError(phygitalId);
+
+        address phygitalOwner = msg.sender;
+
+        address realPhygitalOwner = tokenOwnerOf(phygitalId);
+        if (realPhygitalOwner != phygitalOwner) {
+            revert LSP8NotTokenOwner(
+                realPhygitalOwner,
+                phygitalId,
+                phygitalOwner
+            );
+        }
+
+        if (verifiedOwnership[phygitalId]) {
+            revert PhygitalAssetHasAlreadyAVerifiedOwnership(
+                phygitalOwner,
+                phygitalId
+            );
+        }
+
+        if (
+            !_verifyPhygitalOwnership(
+                phygitalOwner,
+                phygitalId,
+                phygitalSignature
+            )
+        ) {
+            revert PhygitalAssetOwnershipVerificationFailed(
+                phygitalOwner,
+                phygitalId
+            );
+        }
+
+        verifiedOwnership[phygitalId] = true;
     }
 
     /**
