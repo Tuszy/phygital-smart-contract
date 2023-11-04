@@ -25,7 +25,7 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
      * @notice Indicates whether the ownership of the phygital has been verified. Only verified phygitals can be transferred.
      * Minting automatically verifies the ownership, whereas everytime a verified phygital is transferred to another address it loses its verified status and must be reverified by the owner.
      */
-    mapping(bytes32 => bool) verifiedOwnership;
+    mapping(bytes32 => bool) public verifiedOwnership;
 
     /**
      * @notice Constructs a phygital asset
