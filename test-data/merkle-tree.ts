@@ -40,16 +40,15 @@ export const getMintDataForPhygital = (
   const hashedPhygitalOwnerAddress = keccak256("address")(phygitalOwnerAddress);
   const phygitalKeyPair = keyPairs[phygitalIndex];
   const phygitalAddress = phygitalKeyPair.publicKey;
-  const hashedPhygitalAddress = keccak256("address")(phygitalAddress);
+  const phygitalId = keccak256("address")(phygitalAddress);
   const phygitalWallet = new Wallet(phygitalKeyPair.privateKey);
   const phygitalSignature = phygitalWallet.signingKey.sign(
     hashedPhygitalOwnerAddress
   ).serialized;
-  const merkleProof = merkleTree
-    .getProof(hashedPhygitalAddress)
-    .map((node) => node.data);
+  const merkleProof = merkleTree.getProof(phygitalId).map((node) => node.data);
 
   return {
+    phygitalId,
     phygitalAddress,
     phygitalSignature,
     merkleProof,
