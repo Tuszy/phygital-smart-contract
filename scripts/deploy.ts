@@ -5,19 +5,22 @@ import {
 } from "../test-data/merkle-tree";
 
 async function main() {
-  const [collectionOwner, phygitalOwner] = await ethers.getSigners();
+  const [collectionOwner] = await ethers.getSigners();
 
-  const phygitalAsset = await ethers.deployContract("PhygitalAsset", [
-    merkleTreeRoot,
-    merkleTreeLSP2JSONURL,
-    "Sneaker",
-    "SNKR",
-    collectionOwner.address,
-  ]);
+  const phygitalAssetCollection = await ethers.deployContract(
+    "PhygitalAssetCollection",
+    [
+      merkleTreeRoot,
+      merkleTreeLSP2JSONURL,
+      "Sneaker",
+      "SNKR",
+      collectionOwner.address,
+    ]
+  );
 
-  await phygitalAsset.waitForDeployment();
+  await phygitalAssetCollection.waitForDeployment();
 
-  console.log(`Phygital asset deployed to ${phygitalAsset.target}`);
+  console.log(`Phygital asset deployed to ${phygitalAssetCollection.target}`);
 }
 
 main().catch((error) => {
