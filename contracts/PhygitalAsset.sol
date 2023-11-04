@@ -5,7 +5,6 @@ import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts
 import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
-import "hardhat/console.sol";
 
 /**
  * @title Phygital Asset Implementation.
