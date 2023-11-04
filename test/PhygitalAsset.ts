@@ -1,3 +1,4 @@
+import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
@@ -144,7 +145,7 @@ describe("PhygitalAsset", function () {
         );
       });
 
-      it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed  if the msg.sender (universal profile) is not the phygital owner", async function () {
+      it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed if the msg.sender (universal profile) is not the phygital owner", async function () {
         const { phygitalAsset, collectionOwner, phygitalOwner } =
           await loadFixture(deployFixture);
 
@@ -323,18 +324,38 @@ describe("PhygitalAsset", function () {
       );
     });
 
-    /*describe("Events", function () {
-      it("Should emit an event on withdrawals", async function () {
-        const { lock, unlockTime, lockedAmount } = await loadFixture(
-          deployOneYearLockFixture
+    describe("Events", function () {
+      it("Should emit the Transfer event on mint", async function () {
+        const { phygitalAsset, phygitalOwner } = await loadFixture(
+          deployFixture
         );
 
-        await time.increaseTo(unlockTime);
+        const phygitalIndex = 0;
+        const { phygitalAddress, phygitalSignature, merkleProof, phygitalId } =
+          getMintDataForPhygital(
+            phygitalIndex,
+            phygitalOwner.universalProfileAddress
+          );
 
-        await expect(lock.withdraw())
-          .to.emit(lock, "Withdrawal")
-          .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
+        await expect(
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalIndex,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        )
+          .to.emit(phygitalAsset, "Transfer")
+          .withArgs(
+            phygitalOwner.universalProfileAddress,
+            ethers.ZeroAddress,
+            phygitalOwner.universalProfileAddress,
+            phygitalId,
+            false,
+            anyValue
+          );
       });
-    });*/
+    });
   });
 });
