@@ -6,13 +6,21 @@ pragma solidity ^0.8.20;
  */
 error PhygitalAssetOwnershipVerificationFailed(
     address owner,
-    address phygitalAddress
+    bytes32 phygitalAddress
 );
 
 /**
  * @dev Reverts when trying to mint a phygital that is not part of the collection
  */
 error PhygitalAssetIsNotPartOfCollection(
-    address phygitalAddress,
-    uint phygitalIndex
+    uint phygitalIndex,
+    bytes32 phygitalAddress
+);
+
+/**
+ * @dev Reverts when trying to transfer a phygital that has an unverified ownership
+ */
+error PhygitalAssetHasAnUnverifiedOwnership(
+    address owner,
+    bytes32 phygitalAddress
 );

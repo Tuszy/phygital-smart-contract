@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
 import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
-import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection} from "./PhygitalAssetError.sol";
+import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetConstants.sol";
 
 /**
@@ -15,7 +15,16 @@ import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY} from "./PhygitalAssetCon
  * @dev Contract module represents a phygital asset.
  */
 contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
+    /**
+     * @notice Root of the merkle tree which represents the phygital asset collection
+     */
     bytes32 public merkleRootOfCollection;
+
+    /**
+     * @notice Indicates whether the ownership of the phygital has been verified. Only verified phygitals can be transferred.
+     * Minting automatically verifies the ownership, whereas everytime a verified phygital is transferred to another address it loses its verified status and must be reverified by the owner.
+     */
+    mapping(bytes32 => bool) verifiedOwnership;
 
     /**
      * @notice Constructs a phygital asset
@@ -63,7 +72,9 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
         bytes32[] memory merkleProofOfCollection,
         bool force
     ) public {
+        bytes32 phygitalId = keccak256(abi.encodePacked(phygitalAddress));
         address phygitalOwner = msg.sender;
+
         if (
             !_verifyPhygitalOwnership(
                 phygitalOwner,
@@ -73,7 +84,7 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
         ) {
             revert PhygitalAssetOwnershipVerificationFailed(
                 phygitalOwner,
-                phygitalAddress
+                phygitalId
             );
         }
         if (
@@ -84,12 +95,11 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
             )
         ) {
             revert PhygitalAssetIsNotPartOfCollection(
-                phygitalAddress,
-                phygitalIndex
+                phygitalIndex,
+                phygitalId
             );
         }
 
-        bytes32 phygitalId = keccak256(abi.encodePacked(phygitalAddress));
         _mint(phygitalOwner, phygitalId, force, "");
     }
 
@@ -171,5 +181,39 @@ contract PhygitalAsset is LSP8IdentifiableDigitalAsset {
         }
 
         return hash == merkleRootOfCollection;
+    }
+
+    /**
+     * @notice Checks if the ownership is verified, if not then the transfer is reverted unless the phygitalOwner address is zero (during minting)
+     *
+     * @param phygitalOwner The current owner address
+     * @param phygitalId The phygitalId to transfer
+     */
+    function _beforeTokenTransfer(
+        address phygitalOwner,
+        address /*to*/,
+        bytes32 phygitalId,
+        bytes memory /*data*/
+    ) internal view override {
+        if (phygitalOwner != address(0) && !verifiedOwnership[phygitalId])
+            revert PhygitalAssetHasAnUnverifiedOwnership(
+                phygitalOwner,
+                phygitalId
+            );
+    }
+
+    /**
+     * @notice Eithers sets the 'verified ownership' status to true if the phygitalOwner address is zero (during minting) or to false if it is a transfer.
+     *
+     * @param phygitalOwner The current owner address
+     * @param phygitalId The phygitalId to transfer
+     */
+    function _afterTokenTransfer(
+        address phygitalOwner,
+        address /*to*/,
+        bytes32 phygitalId,
+        bytes memory /*data*/
+    ) internal override {
+        verifiedOwnership[phygitalId] = phygitalOwner == address(0);
     }
 }
