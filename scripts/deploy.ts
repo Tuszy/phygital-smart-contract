@@ -2,27 +2,24 @@ import { ethers } from "hardhat";
 import {
   merkleTreeLSP2JSONURL,
   merkleTreeRoot,
-  phygitalAssetCollectionLSP4MetadataJSONURL,
+  phygitalAssetLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
 
 async function main() {
   const [collectionOwner] = await ethers.getSigners();
 
-  const phygitalAssetCollection = await ethers.deployContract(
-    "PhygitalAssetCollection",
-    [
-      merkleTreeRoot,
-      merkleTreeLSP2JSONURL,
-      "Sneaker",
-      "SNKR",
-      phygitalAssetCollectionLSP4MetadataJSONURL,
-      collectionOwner.address,
-    ]
-  );
+  const phygitalAsset = await ethers.deployContract("PhygitalAsset", [
+    merkleTreeRoot,
+    merkleTreeLSP2JSONURL,
+    "Sneaker",
+    "SNKR",
+    phygitalAssetLSP4MetadataJSONURL,
+    collectionOwner.address,
+  ]);
 
-  await phygitalAssetCollection.waitForDeployment();
+  await phygitalAsset.waitForDeployment();
 
-  console.log(`Phygital asset deployed to ${phygitalAssetCollection.target}`);
+  console.log(`Phygital asset deployed to ${phygitalAsset.target}`);
 }
 
 main().catch((error) => {

@@ -42,7 +42,7 @@
     "valueContent": "(Bytes4,Number)"
   },
   {
-    "name": "PhygitalAssetCollectionMerkleTreeURI",
+    "name": "PhygitalAssetMerkleTreeURI",
     "key": "0x931b4f026a670558cbd3aeba98023d97e4910a7f5be2441e3f9ec1c5c5a1001f",
     "keyType": "Singleton",
     "valueType": "bytes",

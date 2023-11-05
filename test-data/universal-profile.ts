@@ -8,15 +8,10 @@ import type { HardhatEthersSigner } from "../node_modules/@nomicfoundation/hardh
 // ABI
 import { abi as LSP0ERC725AccountABI } from "@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json";
 import { abi as LSP6KeyManagerABI } from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
-import { abi as PhygitalAssetCollectionABI } from "../artifacts/contracts/PhygitalAssetCollection.sol/PhygitalAssetCollection.json";
 import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
-import { PhygitalAssetCollection } from "../typechain-types";
+import { PhygitalAsset } from "../typechain-types";
 import { getInterfaceID } from "./util";
 
-console.log(
-  "PhygitalAssetCollection ERC165 Interface ID:",
-  getInterfaceID(new ethers.Interface(PhygitalAssetCollectionABI))
-);
 console.log(
   "PhygitalAsset ERC165 Interface ID:",
   getInterfaceID(new ethers.Interface(PhygitalAssetABI))
@@ -24,7 +19,7 @@ console.log(
 
 export const createUniversalProfile = async (
   universalProfileOwner: HardhatEthersSigner,
-  phygitalAssetCollection: PhygitalAssetCollection
+  phygitalAsset: PhygitalAsset
 ) => {
   const universalProfile = await lspFactory.UniversalProfile.deploy({
     controllerAddresses: [universalProfileOwner.address],
@@ -32,11 +27,7 @@ export const createUniversalProfile = async (
 
   const universalProfileAddress = universalProfile.LSP0ERC725Account.address;
 
-  const phygitalAssetCollectionContractAddress =
-    await phygitalAssetCollection.getAddress();
-  const PhygitalAssetCollectionInterface = new ethers.Interface(
-    PhygitalAssetCollectionABI
-  );
+  const phygitalAssetContractAddress = await phygitalAsset.getAddress();
   const PhygitalAssetInterface = new ethers.Interface(PhygitalAssetABI);
   const LSP0ERC725AccountABIInterface = new ethers.Interface(
     LSP0ERC725AccountABI
@@ -74,8 +65,8 @@ export const createUniversalProfile = async (
     force: boolean
   ) =>
     await executeCallThroughKeyManager(
-      PhygitalAssetCollectionInterface,
-      phygitalAssetCollectionContractAddress,
+      PhygitalAssetInterface,
+      phygitalAssetContractAddress,
       "mint",
       phygitalId,
       phygitalIndex,
@@ -85,13 +76,14 @@ export const createUniversalProfile = async (
     );
 
   const verifyOwnershipAfterTransfer = async (
-    phygitalAssetContractAddress: AddressLike,
+    phygitalId: BytesLike,
     phygitalSignature: BytesLike
   ) =>
     await executeCallThroughKeyManager(
       PhygitalAssetInterface,
       phygitalAssetContractAddress,
       "verifyOwnershipAfterTransfer",
+      phygitalId,
       phygitalSignature
     );
 
@@ -101,8 +93,8 @@ export const createUniversalProfile = async (
     force: boolean
   ) =>
     await executeCallThroughKeyManager(
-      PhygitalAssetCollectionInterface,
-      phygitalAssetCollectionContractAddress,
+      PhygitalAssetInterface,
+      phygitalAssetContractAddress,
       "transfer",
       universalProfileAddress,
       newPhygitalOwner,
@@ -124,16 +116,12 @@ export const createUniversalProfile = async (
 
 // Local constant
 const MAX_ACCOUNTS = 10;
-export const getUniversalProfiles = async (
-  phygitalAssetCollection: PhygitalAssetCollection
-) => {
+export const getUniversalProfiles = async (phygitalAsset: PhygitalAsset) => {
   const signers = await ethers.getSigners();
 
   const accounts = [];
   for (let i = 0; i < MAX_ACCOUNTS && i < signers.length; i++) {
-    accounts.push(
-      await createUniversalProfile(signers[i], phygitalAssetCollection)
-    );
+    accounts.push(await createUniversalProfile(signers[i], phygitalAsset));
   }
 
   return accounts;
