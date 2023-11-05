@@ -46,11 +46,15 @@ contract PhygitalAsset is ERC725Y {
      * @notice Guard: Only a contract of type PhygitalAssetCollectionis allowed to call the modified function.
      */
     modifier onlyOfTypePhygitalAssetCollection() {
-        if (
-            !PhygitalAssetCollection(payable(msg.sender)).supportsInterface(
+        try
+            PhygitalAssetCollection(payable(msg.sender)).supportsInterface(
                 _INTERFACEID_PHYGITAL_ASSET_COLLECTION
             )
-        ) {
+        returns (bool result) {
+            if (!result) {
+                revert SenderNotOfTypePhygitalAssetCollection(msg.sender);
+            }
+        } catch {
             revert SenderNotOfTypePhygitalAssetCollection(msg.sender);
         }
         _;
