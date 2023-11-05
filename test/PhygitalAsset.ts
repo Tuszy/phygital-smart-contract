@@ -9,6 +9,7 @@ import {
 import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
 import { merkleTreeRoot } from "../test-data/merkle-tree";
 import { getUniversalProfiles } from "../test-data/universal-profile";
+import { keccak256 } from "../test-data/util";
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
@@ -108,66 +109,41 @@ describe("PhygitalAsset", function () {
     });
   });
 
-  /*describe("function verifyOwnershipAfterTransfer(bytes32 phygitalId, bytes memory phygitalSignature) public", function () {
+  describe("function verifyOwnershipAfterTransfer(bytes memory phygitalSignature) public", function () {
     describe("Validations", function () {
       it("Should revert with the the custom error PhygitalAssetHasAlreadyAVerifiedOwnership if the phygital ownership is already verified (after mint)", async function () {
-        const { phygitalAssetCollection, phygitalOwner } = await loadFixture(
-          deployFixture
-        );
-
-        const phygitalIndex = 0;
-        const { phygitalId, phygitalSignature, merkleProof } =
-          getVerificationDataForPhygital(
-            phygitalIndex,
-            phygitalOwner.universalProfileAddress
-          );
-
-        await expect(
-          phygitalOwner.mint(
-            phygitalId,
-            phygitalIndex,
-            phygitalSignature,
-            merkleProof,
-            false
-          )
-        ).not.to.be.reverted;
+        const {
+          phygitalAssetContractAddress,
+          phygitalAsset,
+          phygitalOwner,
+          phygitalSignature,
+        } = await loadFixture(deployFixture);
 
         await expect(
           phygitalOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAssetContractAddress,
             phygitalSignature
           )
         ).to.be.revertedWithCustomError(
-          phygitalAssetCollection,
+          phygitalAsset,
           "PhygitalAssetHasAlreadyAVerifiedOwnership"
         );
       });
 
       it("Should revert with the the custom error PhygitalAssetHasAlreadyAVerifiedOwnership if the phygital ownership is already verified (after transfer)", async function () {
-        const { phygitalAssetCollection, collectionOwner, phygitalOwner } =
-          await loadFixture(deployFixture);
-
-        const phygitalIndex = 0;
-        const { phygitalId, phygitalSignature, merkleProof } =
-          getVerificationDataForPhygital(
-            phygitalIndex,
-            phygitalOwner.universalProfileAddress
-          );
-
-        await expect(
-          phygitalOwner.mint(
-            phygitalId,
-            phygitalIndex,
-            phygitalSignature,
-            merkleProof,
-            false
-          )
-        ).not.to.be.reverted;
+        const {
+          phygitalOwner,
+          phygitalAsset,
+          collectionOwner,
+          phygitalIndex,
+          phygitalAssetContractAddress,
+          tokenId,
+        } = await loadFixture(deployFixture);
 
         await expect(
           phygitalOwner.transfer(
             collectionOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).not.to.be.reverted;
@@ -180,54 +156,41 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAssetContractAddress,
             phygitalSignature2
           )
         ).not.to.be.reverted;
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAssetContractAddress,
             phygitalSignature2
           )
         ).to.be.revertedWithCustomError(
-          phygitalAssetCollection,
+          phygitalAsset,
           "PhygitalAssetHasAlreadyAVerifiedOwnership"
         );
       });
 
       it("Should pass after a prior transfer", async function () {
-        const { phygitalAssetCollection, collectionOwner, phygitalOwner } =
-          await loadFixture(deployFixture);
-
-        const phygitalIndex = 0;
-        const { phygitalId, phygitalSignature, merkleProof } =
-          getVerificationDataForPhygital(
-            phygitalIndex,
-            phygitalOwner.universalProfileAddress
-          );
-
-        await expect(
-          phygitalOwner.mint(
-            phygitalId,
-            phygitalIndex,
-            phygitalSignature,
-            merkleProof,
-            false
-          )
-        ).not.to.be.reverted;
+        const {
+          phygitalAsset,
+          phygitalIndex,
+          collectionOwner,
+          phygitalOwner,
+          tokenId,
+          phygitalAssetContractAddress,
+        } = await loadFixture(deployFixture);
 
         await expect(
           phygitalOwner.transfer(
             collectionOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).not.to.be.reverted;
 
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(false);
+        expect(await phygitalAsset.verifiedOwnership()).to.equal(false);
 
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
@@ -237,81 +200,21 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAssetContractAddress,
             phygitalSignature2
           )
         ).not.to.be.reverted;
 
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(true);
-      });
-
-      it("Should revert with the the custom error LSP8NonExistentTokenId if the phygital id has not been minted yet", async function () {
-        const { phygitalAssetCollection, phygitalOwner } = await loadFixture(
-          deployFixture
-        );
-
-        const phygitalIndex = 0;
-        const { phygitalId, phygitalSignature } =
-          getVerificationDataForPhygital(
-            phygitalIndex,
-            phygitalOwner.universalProfileAddress
-          );
-
-        await expect(
-          phygitalOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
-            phygitalSignature
-          )
-        ).to.be.revertedWithCustomError(
-          phygitalAssetCollection,
-          "LSP8NonExistentTokenId"
-        );
-      });
-
-      it("Should revert with the the custom error LSP8NonExistentTokenId if the phygital id does not exist", async function () {
-        const { phygitalAssetCollection, phygitalOwner } = await loadFixture(
-          deployFixture
-        );
-
-        const phygitalIndex = 0;
-        const { phygitalSignature } = getVerificationDataForPhygital(
-          phygitalIndex,
-          phygitalOwner.universalProfileAddress
-        );
-
-        await expect(
-          phygitalOwner.verifyOwnershipAfterTransfer(
-            keccak256("string")("RANDOM DATA"),
-            phygitalSignature
-          )
-        ).to.be.revertedWithCustomError(
-          phygitalAssetCollection,
-          "LSP8NonExistentTokenId"
-        );
+        expect(await phygitalAsset.verifiedOwnership()).to.equal(true);
       });
 
       it("Should revert with the the custom error LSP8NotTokenOwner if the msg.sender is not the current phygital owner", async function () {
-        const { phygitalAssetCollection, collectionOwner, phygitalOwner } =
-          await loadFixture(deployFixture);
-
-        const phygitalIndex = 0;
-        const { phygitalId, phygitalSignature, merkleProof } =
-          getVerificationDataForPhygital(
-            phygitalIndex,
-            phygitalOwner.universalProfileAddress
-          );
-
-        await expect(
-          phygitalOwner.mint(
-            phygitalId,
-            phygitalIndex,
-            phygitalSignature,
-            merkleProof,
-            false
-          )
-        ).not.to.be.reverted;
+        const {
+          phygitalAsset,
+          collectionOwner,
+          phygitalIndex,
+          phygitalAssetContractAddress,
+        } = await loadFixture(deployFixture);
 
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
@@ -321,54 +224,40 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAssetContractAddress,
             phygitalSignature2
           )
-        ).to.be.revertedWithCustomError(
-          phygitalAssetCollection,
-          "LSP8NotTokenOwner"
-        );
+        ).to.be.revertedWithCustomError(phygitalAsset, "LSP8NotTokenOwner");
       });
     });
 
     it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed if the phygital signature is wrong - consquence: msg.sender is not the phygital owner", async function () {
-      const { phygitalAssetCollection, collectionOwner, phygitalOwner } =
-        await loadFixture(deployFixture);
-
-      const phygitalIndex = 0;
-      const { phygitalId, phygitalSignature, merkleProof } =
-        getVerificationDataForPhygital(
-          phygitalIndex,
-          phygitalOwner.universalProfileAddress
-        );
-
-      await expect(
-        phygitalOwner.mint(
-          phygitalId,
-          phygitalIndex,
-          phygitalSignature,
-          merkleProof,
-          false
-        )
-      ).not.to.be.reverted;
+      const {
+        phygitalAsset,
+        collectionOwner,
+        phygitalOwner,
+        tokenId,
+        phygitalAssetContractAddress,
+        phygitalSignature,
+      } = await loadFixture(deployFixture);
 
       await expect(
         phygitalOwner.transfer(
           collectionOwner.universalProfileAddress,
-          phygitalId,
+          tokenId,
           false
         )
       ).not.to.be.reverted;
 
       await expect(
         collectionOwner.verifyOwnershipAfterTransfer(
-          phygitalId,
+          phygitalAssetContractAddress,
           phygitalSignature // wrong signature
         )
       ).to.be.revertedWithCustomError(
-        phygitalAssetCollection,
+        phygitalAsset,
         "PhygitalAssetOwnershipVerificationFailed"
       );
     });
-  });*/
+  });
 });
