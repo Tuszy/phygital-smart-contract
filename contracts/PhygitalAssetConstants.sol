@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 // --- ERC165 interface ids
-bytes4 constant _INTERFACEID_PHYGITAL_ASSET_COLLECTION = 0x6d07b8f0;
+bytes4 constant _INTERFACEID_PHYGITAL_ASSET_COLLECTION = 0xffaea2ca;
 bytes4 constant _INTERFACEID_PHYGITAL_ASSET = 0xf2d3f8b7;
 
 // keccak256('PhygitalAssetCollectionMerkleTreeURI')

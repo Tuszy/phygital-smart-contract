@@ -3,7 +3,9 @@ pragma solidity ^0.8.20;
 
 import {PhygitalAsset} from "./PhygitalAsset.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {LSP8Enumerable} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Enumerable.sol";
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
+import {LSP8IdentifiableDigitalAssetCore} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol";
 import {LSP8NotTokenOwner, LSP8TokenIdAlreadyMinted} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {_LSP8_TOKENID_TYPE_ADDRESS} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
@@ -17,7 +19,7 @@ import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_AS
  * @author Dennis Tuszynski
  * @dev Contract module represents a phygital asset collection.
  */
-contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
+contract PhygitalAssetCollection is LSP8Enumerable {
     /**
      * @notice Root of the merkle tree which represents the phygital asset collection
      */
@@ -211,14 +213,16 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
      * @notice Checks if the ownership is verified, if not then the transfer is reverted unless the phygitalOwner address is zero (during minting)
      *
      * @param phygitalOwner The current owner address
+     * @param newPhygitalOwner The new owner address
      * @param phygitalContractAddressAsBytes32 The phygital contract address as bytes32 (tokenId)
+     * @param data Custom data (unused)
      */
     function _beforeTokenTransfer(
         address phygitalOwner,
-        address /*to*/,
+        address newPhygitalOwner,
         bytes32 phygitalContractAddressAsBytes32,
-        bytes memory /*data*/
-    ) internal view override {
+        bytes memory data
+    ) internal override(LSP8Enumerable) {
         PhygitalAsset phygitalAsset = PhygitalAsset(
             address(uint160(uint256(phygitalContractAddressAsBytes32)))
         );
@@ -228,26 +232,41 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
                 phygitalAsset.id()
             );
         }
+
+        super._beforeTokenTransfer(
+            phygitalOwner,
+            newPhygitalOwner,
+            phygitalContractAddressAsBytes32,
+            data
+        );
     }
 
     /**
      * @notice Eithers sets the 'verified ownership' status to true if the phygitalOwner address is zero (during minting) or to false if it is a transfer.
      *
      * @param phygitalOwner The current owner address
+     * @param newPhygitalOwner The new owner address
      * @param phygitalContractAddressAsBytes32 The phygital contract address as bytes32 (tokenId)
+     * @param data Custom data (unused)
      */
     function _afterTokenTransfer(
         address phygitalOwner,
-        address /*newPhygitalOwner*/,
+        address newPhygitalOwner,
         bytes32 phygitalContractAddressAsBytes32,
-        bytes memory /*data*/
-    ) internal override {
+        bytes memory data
+    ) internal override(LSP8IdentifiableDigitalAssetCore) {
         if (phygitalOwner != address(0)) {
             PhygitalAsset phygitalAsset = PhygitalAsset(
                 address(uint160(uint256(phygitalContractAddressAsBytes32)))
             );
             phygitalAsset.resetOwnershipVerificationAfterTransfer();
         }
+        super._afterTokenTransfer(
+            phygitalOwner,
+            newPhygitalOwner,
+            phygitalContractAddressAsBytes32,
+            data
+        );
     }
 
     /**

@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {ERC725Y, ERC725YCore} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
+import {OwnableUnset} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
 import {LSP8NotTokenOwner} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {PhygitalAssetCollection} from "./PhygitalAssetCollection.sol";
 import {NotContainingPhygitalAssetCollection, SenderNotOfTypePhygitalAssetCollection, SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner, PhygitalAssetHasAlreadyAVerifiedOwnership, PhygitalAssetOwnershipVerificationFailed, PhygitalAssetContainingCollectionMustNotBeChanged} from "./PhygitalAssetError.sol";
@@ -114,9 +115,9 @@ contract PhygitalAsset is ERC725Y {
     }
 
     /**
-     * Override to allow not only the phygital owner but also the containing collection to edit the ERC725Y data.
+     * Allow not only the the owner (containing collection) but also the phygital owner to edit the ERC725Y data.
      */
-    function _checkOwner() internal view override {
+    function _checkOwner() internal view virtual override(OwnableUnset) {
         if (owner() != msg.sender && phygitalOwner() != msg.sender) {
             revert SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner(
                 msg.sender,
@@ -129,7 +130,9 @@ contract PhygitalAsset is ERC725Y {
     /**
      * Disallow changing the owner (containing collection)
      */
-    function _setOwner(address newOwner) internal override {
+    function _setOwner(
+        address newOwner
+    ) internal virtual override(OwnableUnset) {
         if (owner() != address(0)) {
             revert PhygitalAssetContainingCollectionMustNotBeChanged();
         }
