@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: Apache 2.0
 pragma solidity ^0.8.20;
 
 import {PhygitalAsset} from "./PhygitalAsset.sol";
@@ -143,7 +143,7 @@ contract PhygitalAssetCollection is LSP8Enumerable {
         (
             address phygitalAddress,
             ECDSA.RecoverError recoverError,
-            bytes32 signatureLength
+
         ) = hashedPhygitalOwnerAddress.tryRecover(phygitalSignature);
         if (ECDSA.RecoverError.NoError != recoverError)
             revert PhygitalAssetOwnershipVerificationFailed(
