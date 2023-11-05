@@ -13,10 +13,11 @@ import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_AS
 
 /**
  * @title Phygital Asset Collection Implementation.
- * A phygital asset is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the merkle tree leaf layer (= "collection").
+ * A phygital asset collection is comprised of a specified amount of phygitals, which are included in a merkle tree to verify their validity/existence during minting (similar to a whitelist).
+ * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the merkle tree leaf layer (= list of available phygitals).
  * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership (e.g. during minting).
- * The so called 'phygital id' results from the keccak256 hash of the phygital address. Attention: The 'phygital id' is NOT equal to the 'tokenId'.
- * Minting a phygital creates an instance of type PhygitalAsset. The resulting contract address is casted to bytes32 and used/referred as the 'tokenId'.
+ * The so called 'phygital id' results from the keccak256 hash of the phygital address. Attention: The 'phygital id' is NOT equal to the LSP8 'tokenId'.
+ * Minting a phygital creates an instance of type PhygitalAsset. The resulting contract address is casted to bytes32 and this value is referred to as the 'tokenId'.
  * @author Dennis Tuszynski
  * @dev Contract module represents a phygital asset collection.
  */
@@ -27,7 +28,7 @@ contract PhygitalAssetCollection is LSP8Enumerable {
     bytes32 public immutable merkleRootOfCollection;
 
     /**
-     * @notice Maps the phygital ids (keccak256 hashed public key of nfc tag or qr code) to the corresponding contract addresses
+     * @notice Maps the phygital ids (keccak256 hashed public key of nfc tag or qr code) to the corresponding PhygitalAsset contract addresses
      */
     mapping(bytes32 => address) public phygitalIdToContractAddress;
 

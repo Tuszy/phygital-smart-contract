@@ -16,6 +16,10 @@ import {_INTERFACEID_PHYGITAL_ASSET, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} fro
  * @dev Contract module represents a phygital asset.
  */
 contract PhygitalAsset is ERC725Y {
+    /**
+     * @notice The so called 'phygital id' results from the keccak256 hash of the phygital address. Attention: The 'phygital id' is NOT equal to the 'tokenId'.
+     * Minting a phygital creates an instance of type PhygitalAsset. The resulting contract address is casted to bytes32 and this value is referred to as the 'tokenId'.
+     */
     bytes32 public immutable id;
     bool public verifiedOwnership;
 
@@ -99,9 +103,14 @@ contract PhygitalAsset is ERC725Y {
      */
     function phygitalOwner() public view returns (address) {
         return
-            PhygitalAssetCollection(payable(owner())).tokenOwnerOf(
-                bytes32(uint256(uint160(address(this))))
-            );
+            PhygitalAssetCollection(payable(owner())).tokenOwnerOf(tokenId());
+    }
+
+    /**
+     *  @notice Returns the token id of the phygital (NOT equal to the phygital id)
+     */
+    function tokenId() public view returns (bytes32) {
+        return bytes32(uint256(uint160(address(this))));
     }
 
     /**
