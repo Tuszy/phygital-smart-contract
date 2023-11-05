@@ -51,3 +51,8 @@ error SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner(
     address phygitalAssetCollectionAddress,
     address phygitalAssetOwnerAddress
 );
+
+/**
+ * @dev Reverts when trying to change the owner (containing collection) of a PhygitalAsset contract instance
+ */
+error PhygitalAssetContainingCollectionMustNotBeChanged();

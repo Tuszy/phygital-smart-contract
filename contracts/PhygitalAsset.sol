@@ -5,7 +5,7 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {ERC725Y, ERC725YCore} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
 import {LSP8NotTokenOwner} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {PhygitalAssetCollection} from "./PhygitalAssetCollection.sol";
-import {NotContainingPhygitalAssetCollection, SenderNotOfTypePhygitalAssetCollection, SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner, PhygitalAssetHasAlreadyAVerifiedOwnership, PhygitalAssetOwnershipVerificationFailed} from "./PhygitalAssetError.sol";
+import {NotContainingPhygitalAssetCollection, SenderNotOfTypePhygitalAssetCollection, SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner, PhygitalAssetHasAlreadyAVerifiedOwnership, PhygitalAssetOwnershipVerificationFailed, PhygitalAssetContainingCollectionMustNotBeChanged} from "./PhygitalAssetError.sol";
 import {_INTERFACEID_PHYGITAL_ASSET, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} from "./PhygitalAssetConstants.sol";
 
 /**
@@ -104,6 +104,16 @@ contract PhygitalAsset is ERC725Y {
     }
 
     /**
+     * Resets the ownership verification status to false
+     */
+    function resetOwnershipVerificationAfterTransfer()
+        external
+        onlyContainingCollection
+    {
+        verifiedOwnership = false;
+    }
+
+    /**
      * Override to allow not only the phygital owner but also the containing collection to edit the ERC725Y data.
      */
     function _checkOwner() internal view override {
@@ -117,13 +127,13 @@ contract PhygitalAsset is ERC725Y {
     }
 
     /**
-     * Resets the ownership verification status to false
+     * Disallow changing the owner (containing collection)
      */
-    function resetOwnershipVerificationAfterTransfer()
-        external
-        onlyContainingCollection
-    {
-        verifiedOwnership = false;
+    function _setOwner(address newOwner) internal override {
+        if (owner() != address(0)) {
+            revert PhygitalAssetContainingCollectionMustNotBeChanged();
+        }
+        super._setOwner(newOwner);
     }
 
     /**
