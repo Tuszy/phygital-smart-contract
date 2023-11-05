@@ -8,7 +8,7 @@ import {
 } from "../test-data/merkle-tree";
 
 import { merkleTreeRoot } from "../test-data/merkle-tree";
-import { getOwnerAndUniversalProfiles } from "../test-data/universal-profile";
+import { getUniversalProfiles } from "../test-data/universal-profile";
 
 // see schemas/PhygitalAssetCollection.json
 const PhygitalAssetCollectionMerkleTreeURI =
@@ -43,7 +43,7 @@ describe("PhygitalAssetCollection", function () {
       owner.address
     );
 
-    const [collectionOwner, phygitalOwner] = await getOwnerAndUniversalProfiles(
+    const [collectionOwner, phygitalOwner] = await getUniversalProfiles(
       phygitalAssetCollection
     );
 

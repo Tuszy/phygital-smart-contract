@@ -8,7 +8,7 @@ import {
 } from "../test-data/merkle-tree";
 import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
 import { merkleTreeRoot } from "../test-data/merkle-tree";
-import { getOwnerAndUniversalProfiles } from "../test-data/universal-profile";
+import { getUniversalProfiles } from "../test-data/universal-profile";
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
@@ -29,7 +29,7 @@ describe("PhygitalAsset", function () {
     const phygitalAssetCollectionContractAddress =
       await phygitalAssetCollection.getAddress();
 
-    const [collectionOwner, phygitalOwner] = await getOwnerAndUniversalProfiles(
+    const [collectionOwner, phygitalOwner] = await getUniversalProfiles(
       phygitalAssetCollection
     );
 

@@ -6,6 +6,11 @@ import "hardhat-deploy";
 import { EthersExternalProvider, LSPFactory } from "@lukso/lsp-factory.js";
 import { ERC725 } from "@erc725/erc725.js";
 
+const DEFAULT_PRIVATE_KEY =
+  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+const LSP_FACTORY_PRIVATE_KEY =
+  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff82";
+
 declare module "hardhat/types/runtime" {
   interface HardhatRuntimeEnvironment {
     Web3Provider: any;
@@ -26,7 +31,7 @@ extendEnvironment(async (hre) => {
   hre.LSPFactory = LSPFactory;
   hre.lspFactory = new LSPFactory(
     hre.Web3Provider as EthersExternalProvider,
-    hre.network.config.accounts[0]
+    LSP_FACTORY_PRIVATE_KEY ?? hre.network.config.accounts[0]
   );
 });
 
@@ -34,9 +39,6 @@ extendEnvironment(async (hre) => {
 extendEnvironment(async (hre) => {
   hre.ERC725 = ERC725;
 });
-
-const DEFAULT_PRIVATE_KEY =
-  "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -85,6 +87,10 @@ const config: HardhatUserConfig = {
             "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
           balance: "10000000000000000000000", // 10000 ETH
         },
+        {
+          privateKey: LSP_FACTORY_PRIVATE_KEY,
+          balance: "10000000000000000000000", // 10000 ETH
+        },
       ],
     },
     localhost: {
@@ -95,6 +101,7 @@ const config: HardhatUserConfig = {
         "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
         "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
         "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
+        LSP_FACTORY_PRIVATE_KEY,
       ],
     },
   },

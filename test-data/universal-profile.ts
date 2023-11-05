@@ -124,7 +124,7 @@ export const createUniversalProfile = async (
 
 // Local constant
 const MAX_ACCOUNTS = 10;
-export const getOwnerAndUniversalProfiles = async (
+export const getUniversalProfiles = async (
   phygitalAssetCollection: PhygitalAssetCollection
 ) => {
   const signers = await ethers.getSigners();
