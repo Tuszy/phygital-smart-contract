@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
+import {PhygitalAsset} from "./PhygitalAsset.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
-import {LSP8NotTokenOwner} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
-import {_LSP8_TOKENID_TYPE_HASH} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
+import {LSP8NotTokenOwner, LSP8TokenIdAlreadyMinted} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
+import {_LSP8_TOKENID_TYPE_ADDRESS} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} from "./PhygitalAssetConstants.sol";
 
@@ -23,10 +24,9 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
     bytes32 public merkleRootOfCollection;
 
     /**
-     * @notice Indicates whether the ownership of the phygital has been verified. Only verified phygitals can be transferred.
-     * Minting automatically verifies the ownership, whereas everytime a verified phygital is transferred to another address it loses its verified status and must be reverified by the owner.
+     * @notice Maps the phygital ids (keccak256 hashed public key of nfc tag or qr code) to the corresponding contract addresses
      */
-    mapping(bytes32 => bool) public verifiedOwnership;
+    mapping(bytes32 => address) public phygitalIdToContractAddress;
 
     /**
      * @notice Constructs a phygital asset collection
@@ -48,7 +48,7 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
             name_,
             symbol_,
             collectionOwner_,
-            _LSP8_TOKENID_TYPE_HASH
+            _LSP8_TOKENID_TYPE_ADDRESS
         )
     {
         merkleRootOfCollection = merkleRootOfCollection_;
@@ -76,8 +76,16 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
     ) public {
         address phygitalOwner = msg.sender;
 
+        if (phygitalIdToContractAddress[phygitalId] != address(0)) {
+            revert LSP8TokenIdAlreadyMinted(
+                bytes32(
+                    uint256(uint160(phygitalIdToContractAddress[phygitalId]))
+                )
+            );
+        }
+
         if (
-            !_verifyPhygitalOwnership(
+            !verifyPhygitalOwnership(
                 phygitalOwner,
                 phygitalId,
                 phygitalSignature
@@ -101,79 +109,43 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
             );
         }
 
-        _mint(phygitalOwner, phygitalId, force, "");
-    }
+        PhygitalAsset phygitalAsset = new PhygitalAsset(
+            phygitalId,
+            phygitalOwner
+        );
 
-    /**
-     * @notice Tries to verify the ownership of the phygital after a transfer - on success updates the verifiedOwnership field with true.
-     *
-     * @param phygitalId id of the phygital (keccak256 hashed public key of nfc tag or qr code)
-     * @param phygitalSignature signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
-     */
-    function verifyOwnershipAfterTransfer(
-        bytes32 phygitalId,
-        bytes memory phygitalSignature
-    ) public {
-        _existsOrError(phygitalId);
+        phygitalIdToContractAddress[phygitalId] = address(phygitalAsset);
 
-        address phygitalOwner = msg.sender;
-
-        address realPhygitalOwner = tokenOwnerOf(phygitalId);
-        if (realPhygitalOwner != phygitalOwner) {
-            revert LSP8NotTokenOwner(
-                realPhygitalOwner,
-                phygitalId,
-                phygitalOwner
-            );
-        }
-
-        if (verifiedOwnership[phygitalId]) {
-            revert PhygitalAssetHasAlreadyAVerifiedOwnership(
-                phygitalOwner,
-                phygitalId
-            );
-        }
-
-        if (
-            !_verifyPhygitalOwnership(
-                phygitalOwner,
-                phygitalId,
-                phygitalSignature
-            )
-        ) {
-            revert PhygitalAssetOwnershipVerificationFailed(
-                phygitalOwner,
-                phygitalId
-            );
-        }
-
-        verifiedOwnership[phygitalId] = true;
+        bytes32 phygitalIdToContractAddressAsBytes32 = bytes32(
+            uint256(uint160(address(phygitalAsset)))
+        );
+        _mint(phygitalOwner, phygitalIdToContractAddressAsBytes32, force, "");
     }
 
     /**
      * @notice Verifies the ownership of the phygital by recovering the signer from the signature
      *
-     * @param _phygitalOwner address of the phygital owner
-     * @param _phygitalId id of the phygital (keccak256 hashed public key of nfc tag or qr code)
-     * @param _phygitalSignature signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
+     * @param phygitalOwner address of the phygital owner
+     * @param phygitalId id of the phygital (keccak256 hashed public key of nfc tag or qr code)
+     * @param phygitalSignature signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
      */
-    function _verifyPhygitalOwnership(
-        address _phygitalOwner,
-        bytes32 _phygitalId,
-        bytes memory _phygitalSignature
+    function verifyPhygitalOwnership(
+        address phygitalOwner,
+        bytes32 phygitalId,
+        bytes memory phygitalSignature
     ) public pure returns (bool) {
         bytes32 hashedPhygitalOwnerAddress = keccak256(
-            abi.encodePacked(_phygitalOwner)
+            abi.encodePacked(phygitalOwner)
         );
         return
             keccak256(
                 abi.encodePacked(
                     _recoverSigner(
                         hashedPhygitalOwnerAddress,
-                        _phygitalSignature
+                        phygitalSignature
                     )
                 )
-            ) == _phygitalId;
+            ) == phygitalId;
     }
 
     /**
@@ -242,34 +214,44 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
      * @notice Checks if the ownership is verified, if not then the transfer is reverted unless the phygitalOwner address is zero (during minting)
      *
      * @param phygitalOwner The current owner address
-     * @param phygitalId The phygitalId to transfer
+     * @param phygitalContractAddressAsBytes32 The phygital contract address as bytes32 (tokenId)
      */
     function _beforeTokenTransfer(
         address phygitalOwner,
         address /*to*/,
-        bytes32 phygitalId,
+        bytes32 phygitalContractAddressAsBytes32,
         bytes memory /*data*/
     ) internal view override {
-        if (phygitalOwner != address(0) && !verifiedOwnership[phygitalId])
+        PhygitalAsset phygitalAsset = PhygitalAsset(
+            address(uint160(uint256(phygitalContractAddressAsBytes32)))
+        );
+        if (phygitalOwner != address(0) && !phygitalAsset.verifiedOwnership()) {
             revert PhygitalAssetHasAnUnverifiedOwnership(
                 phygitalOwner,
-                phygitalId
+                phygitalAsset.id()
             );
+        }
     }
 
     /**
      * @notice Eithers sets the 'verified ownership' status to true if the phygitalOwner address is zero (during minting) or to false if it is a transfer.
      *
      * @param phygitalOwner The current owner address
-     * @param phygitalId The phygitalId to transfer
+     * @param newPhygitalOwner The new owner address
+     * @param phygitalContractAddressAsBytes32 The phygital contract address as bytes32 (tokenId)
      */
     function _afterTokenTransfer(
         address phygitalOwner,
-        address /*to*/,
-        bytes32 phygitalId,
+        address newPhygitalOwner,
+        bytes32 phygitalContractAddressAsBytes32,
         bytes memory /*data*/
     ) internal override {
-        verifiedOwnership[phygitalId] = phygitalOwner == address(0);
+        if (phygitalOwner != address(0)) {
+            PhygitalAsset phygitalAsset = PhygitalAsset(
+                address(uint160(uint256(phygitalContractAddressAsBytes32)))
+            );
+            phygitalAsset.transferTo(newPhygitalOwner);
+        }
     }
 
     /**

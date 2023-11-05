@@ -5,7 +5,7 @@ import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {ERC725Y, ERC725YCore} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
 import {LSP8NotTokenOwner} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {PhygitalAssetCollection} from "./PhygitalAssetCollection.sol";
-import {NotContainingPhygitalAssetCollection, SenderNotOfTypePhygitalAssetCollection, SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner} from "./PhygitalAssetError.sol";
+import {NotContainingPhygitalAssetCollection, SenderNotOfTypePhygitalAssetCollection, SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner, PhygitalAssetHasAlreadyAVerifiedOwnership, PhygitalAssetOwnershipVerificationFailed} from "./PhygitalAssetError.sol";
 import {_INTERFACEID_PHYGITAL_ASSET, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} from "./PhygitalAssetConstants.sol";
 
 /**
@@ -33,7 +33,7 @@ contract PhygitalAsset is ERC725Y {
      * @notice Guard: Only the containing collection is allowed to call the modified function.
      */
     modifier onlyContainingCollection() {
-        if (msg.sender == address(collection)) {
+        if (msg.sender != address(collection)) {
             revert NotContainingPhygitalAssetCollection(
                 msg.sender,
                 address(collection)
@@ -47,7 +47,7 @@ contract PhygitalAsset is ERC725Y {
      */
     modifier onlyOfTypePhygitalAssetCollection() {
         if (
-            PhygitalAssetCollection(payable(msg.sender)).supportsInterface(
+            !PhygitalAssetCollection(payable(msg.sender)).supportsInterface(
                 _INTERFACEID_PHYGITAL_ASSET_COLLECTION
             )
         ) {
@@ -72,7 +72,33 @@ contract PhygitalAsset is ERC725Y {
     }
 
     /**
-     * Allows not only the phygital owner but also the collection to edit the ERC725Y data.
+     * @notice Tries to verify the ownership of the phygital after a transfer - on success updates the verifiedOwnership field with true.
+     *
+     * @param phygitalSignature signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
+     */
+    function verifyOwnershipAfterTransfer(
+        bytes memory phygitalSignature
+    ) public onlyPhygitalOwner {
+        address phygitalOwner = msg.sender;
+        if (verifiedOwnership) {
+            revert PhygitalAssetHasAlreadyAVerifiedOwnership(phygitalOwner, id);
+        }
+
+        if (
+            !collection.verifyPhygitalOwnership(
+                phygitalOwner,
+                id,
+                phygitalSignature
+            )
+        ) {
+            revert PhygitalAssetOwnershipVerificationFailed(phygitalOwner, id);
+        }
+
+        verifiedOwnership = true;
+    }
+
+    /**
+     * Override to allow not only the phygital owner but also the containing collection to edit the ERC725Y data.
      */
     function _checkOwner() internal view override {
         if (owner() != msg.sender && address(collection) != msg.sender) {
@@ -82,6 +108,14 @@ contract PhygitalAsset is ERC725Y {
                 owner()
             );
         }
+    }
+
+    /**
+     * Resets the ownership verification status to false
+     */
+    function transferTo(address newOwner) external onlyContainingCollection {
+        verifiedOwnership = false;
+        transferOwnership(newOwner);
     }
 
     /**

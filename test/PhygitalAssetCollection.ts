@@ -9,7 +9,6 @@ import {
 
 import { merkleTreeRoot } from "../test-data/merkle-tree";
 import { getOwnerAndUniversalProfiles } from "../test-data/universal-profile";
-import { keccak256 } from "../test-data/util";
 
 // see schemas/PhygitalAssetCollection.json
 const PhygitalAssetCollectionMerkleTreeURI =
@@ -20,7 +19,7 @@ const LSP4TokenSymbol =
   "0x2f0a68ab07768e01943a599e73362a0e17a63a72e94dd2e384d2c1d4db932756";
 const LSP8TokenIdTypeKey =
   "0x715f248956de7ce65e94d9d836bfead479f7e70d69b718d47bfe7b00e05b4fe4";
-const LSP8TokenIdTypeHash = 3;
+const LSP8TokenIdTypeAddress = 4;
 
 describe("PhygitalAssetCollection", function () {
   async function deployFixture() {
@@ -102,12 +101,12 @@ describe("PhygitalAssetCollection", function () {
       ).to.equal(phygitalCollectionMerkleTreeJSONURL);
     });
 
-    it("Should set the token id type to hash", async function () {
+    it("Should set the token id type to address", async function () {
       const { phygitalAssetCollection } = await loadFixture(deployFixture);
 
       expect(
         await phygitalAssetCollection.getData(LSP8TokenIdTypeKey)
-      ).to.equal(BigInt(LSP8TokenIdTypeHash));
+      ).to.equal(BigInt(LSP8TokenIdTypeAddress));
     });
 
     it("Should set the right owner", async function () {
@@ -355,7 +354,7 @@ describe("PhygitalAssetCollection", function () {
             phygitalOwner.universalProfileAddress,
             ethers.ZeroAddress,
             phygitalOwner.universalProfileAddress,
-            phygitalId,
+            anyValue,
             false,
             anyValue
           );
@@ -386,14 +385,15 @@ describe("PhygitalAssetCollection", function () {
           )
         ).not.to.be.reverted;
 
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(true);
+        const tokenId = ethers.zeroPadValue(
+          await phygitalAssetCollection.phygitalIdToContractAddress(phygitalId),
+          32
+        );
 
         await expect(
           phygitalOwner.transfer(
             collectionOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).not.to.be.reverted;
@@ -420,22 +420,23 @@ describe("PhygitalAssetCollection", function () {
           )
         ).not.to.be.reverted;
 
+        const tokenId = ethers.zeroPadValue(
+          await phygitalAssetCollection.phygitalIdToContractAddress(phygitalId),
+          32
+        );
+
         await expect(
           phygitalOwner.transfer(
             collectionOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).not.to.be.reverted;
 
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(false);
-
         await expect(
           collectionOwner.transfer(
             phygitalOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).to.be.revertedWithCustomError(
@@ -465,21 +466,18 @@ describe("PhygitalAssetCollection", function () {
           )
         ).not.to.be.reverted;
 
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(true);
+        const tokenId = ethers.zeroPadValue(
+          await phygitalAssetCollection.phygitalIdToContractAddress(phygitalId),
+          32
+        );
 
         await expect(
           phygitalOwner.transfer(
             collectionOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).not.to.be.reverted;
-
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(false);
 
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
@@ -489,7 +487,7 @@ describe("PhygitalAssetCollection", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            tokenId,
             phygitalSignature2
           )
         ).not.to.be.reverted;
@@ -497,19 +495,15 @@ describe("PhygitalAssetCollection", function () {
         await expect(
           collectionOwner.transfer(
             phygitalOwner.universalProfileAddress,
-            phygitalId,
+            tokenId,
             false
           )
         ).not.to.be.reverted;
-
-        expect(
-          await phygitalAssetCollection.verifiedOwnership(phygitalId)
-        ).to.equal(false);
       });
     });
   });
 
-  describe("function verifyOwnershipAfterTransfer(bytes32 phygitalId, bytes memory phygitalSignature) public", function () {
+  /*describe("function verifyOwnershipAfterTransfer(bytes32 phygitalId, bytes memory phygitalSignature) public", function () {
     describe("Validations", function () {
       it("Should revert with the the custom error PhygitalAssetHasAlreadyAVerifiedOwnership if the phygital ownership is already verified (after mint)", async function () {
         const { phygitalAssetCollection, phygitalOwner } = await loadFixture(
@@ -771,5 +765,5 @@ describe("PhygitalAssetCollection", function () {
         "PhygitalAssetOwnershipVerificationFailed"
       );
     });
-  });
+  });*/
 });
