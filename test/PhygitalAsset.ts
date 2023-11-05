@@ -76,12 +76,6 @@ describe("PhygitalAsset", function () {
   }
 
   describe("Deployment", function () {
-    it("Should set the 'verifiedOwnership' to true", async function () {
-      const { phygitalAsset } = await loadFixture(deployFixture);
-
-      expect(await phygitalAsset.verifiedOwnership()).to.equal(true);
-    });
-
     it("Should set the 'collection' to the creating PhygitalAssetCollection contract instance", async function () {
       const { phygitalAssetCollectionContractAddress, phygitalAsset } =
         await loadFixture(deployFixture);
@@ -162,6 +156,48 @@ describe("PhygitalAsset", function () {
       ).not.to.be.reverted;
 
       expect(await phygitalAsset.verifiedOwnership()).to.equal(true);
+    });
+  });
+
+  describe("function owner() public view virtual returns (address)", function () {
+    it("Should be the initial 'phygital owner' after mint", async function () {
+      const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
+
+      expect(await phygitalAsset.owner()).to.equal(
+        phygitalOwner.universalProfileAddress
+      );
+    });
+
+    it("Should be the new 'phygital owner' after transfer", async function () {
+      const { phygitalOwner, collectionOwner, tokenId, phygitalAsset } =
+        await loadFixture(deployFixture);
+
+      await expect(
+        phygitalOwner.transfer(
+          collectionOwner.universalProfileAddress,
+          tokenId,
+          false
+        )
+      ).not.to.be.reverted;
+
+      expect(await phygitalAsset.owner()).to.equal(
+        collectionOwner.universalProfileAddress
+      );
+    });
+  });
+
+  describe("function transferTo(address newOwner) external onlyContainingCollection", function () {
+    it("Should revert with the the custom error NotContainingPhygitalAssetCollection if the function is not called by the containing PhygitalAssetCollection contract instance", async function () {
+      const { phygitalAsset, collectionOwner } = await loadFixture(
+        deployFixture
+      );
+
+      await expect(
+        phygitalAsset.transferTo(collectionOwner.universalProfileAddress)
+      ).to.be.revertedWithCustomError(
+        phygitalAsset,
+        "NotContainingPhygitalAssetCollection"
+      );
     });
   });
 
