@@ -109,10 +109,7 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
             );
         }
 
-        PhygitalAsset phygitalAsset = new PhygitalAsset(
-            phygitalId,
-            phygitalOwner
-        );
+        PhygitalAsset phygitalAsset = new PhygitalAsset(phygitalId);
 
         phygitalIdToContractAddress[phygitalId] = address(phygitalAsset);
 
@@ -237,12 +234,11 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
      * @notice Eithers sets the 'verified ownership' status to true if the phygitalOwner address is zero (during minting) or to false if it is a transfer.
      *
      * @param phygitalOwner The current owner address
-     * @param newPhygitalOwner The new owner address
      * @param phygitalContractAddressAsBytes32 The phygital contract address as bytes32 (tokenId)
      */
     function _afterTokenTransfer(
         address phygitalOwner,
-        address newPhygitalOwner,
+        address /*newPhygitalOwner*/,
         bytes32 phygitalContractAddressAsBytes32,
         bytes memory /*data*/
     ) internal override {
@@ -250,7 +246,7 @@ contract PhygitalAssetCollection is LSP8IdentifiableDigitalAsset {
             PhygitalAsset phygitalAsset = PhygitalAsset(
                 address(uint160(uint256(phygitalContractAddressAsBytes32)))
             );
-            phygitalAsset.transferTo(newPhygitalOwner);
+            phygitalAsset.resetOwnershipVerificationAfterTransfer();
         }
     }
 

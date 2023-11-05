@@ -16,14 +16,13 @@ import {_INTERFACEID_PHYGITAL_ASSET, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} fro
  */
 contract PhygitalAsset is ERC725Y {
     bytes32 public immutable id;
-    PhygitalAssetCollection public immutable collection;
     bool public verifiedOwnership;
 
     /**
      * @notice Guard: Only the phygital owner is allowed to call the modified function.
      */
     modifier onlyPhygitalOwner() {
-        if (msg.sender != owner()) {
+        if (msg.sender != phygitalOwner()) {
             revert LSP8NotTokenOwner(owner(), id, msg.sender);
         }
         _;
@@ -33,11 +32,8 @@ contract PhygitalAsset is ERC725Y {
      * @notice Guard: Only the containing collection is allowed to call the modified function.
      */
     modifier onlyContainingCollection() {
-        if (msg.sender != address(collection)) {
-            revert NotContainingPhygitalAssetCollection(
-                msg.sender,
-                address(collection)
-            );
+        if (msg.sender != owner()) {
+            revert NotContainingPhygitalAssetCollection(msg.sender, owner());
         }
         _;
     }
@@ -64,13 +60,10 @@ contract PhygitalAsset is ERC725Y {
      * @notice Constructs a phygital asset
      *
      * @param id_ The id of the phygital that is represented by this contract instance
-     * @param owner_ The owner of the phygital
      */
     constructor(
-        bytes32 id_,
-        address owner_
-    ) onlyOfTypePhygitalAssetCollection ERC725Y(owner_) {
-        collection = PhygitalAssetCollection(payable(msg.sender));
+        bytes32 id_
+    ) onlyOfTypePhygitalAssetCollection ERC725Y(msg.sender) {
         id = id_;
         verifiedOwnership = true;
     }
@@ -83,33 +76,42 @@ contract PhygitalAsset is ERC725Y {
     function verifyOwnershipAfterTransfer(
         bytes memory phygitalSignature
     ) public onlyPhygitalOwner {
-        address phygitalOwner = msg.sender;
         if (verifiedOwnership) {
-            revert PhygitalAssetHasAlreadyAVerifiedOwnership(phygitalOwner, id);
+            revert PhygitalAssetHasAlreadyAVerifiedOwnership(msg.sender, id);
         }
 
         if (
-            !collection.verifyPhygitalOwnership(
-                phygitalOwner,
+            !PhygitalAssetCollection(payable(owner())).verifyPhygitalOwnership(
+                msg.sender,
                 id,
                 phygitalSignature
             )
         ) {
-            revert PhygitalAssetOwnershipVerificationFailed(phygitalOwner, id);
+            revert PhygitalAssetOwnershipVerificationFailed(msg.sender, id);
         }
 
         verifiedOwnership = true;
     }
 
     /**
+     *  @notice Returns the address of the phygital owner (fetch from the containing collection)
+     */
+    function phygitalOwner() public view returns (address) {
+        return
+            PhygitalAssetCollection(payable(owner())).tokenOwnerOf(
+                bytes32(uint256(uint160(address(this))))
+            );
+    }
+
+    /**
      * Override to allow not only the phygital owner but also the containing collection to edit the ERC725Y data.
      */
     function _checkOwner() internal view override {
-        if (owner() != msg.sender && address(collection) != msg.sender) {
+        if (owner() != msg.sender && phygitalOwner() != msg.sender) {
             revert SenderIsNeitherPhygitalAssetCollectionNorPhygitalAssetOwner(
                 msg.sender,
-                address(collection),
-                owner()
+                owner(),
+                phygitalOwner()
             );
         }
     }
@@ -117,9 +119,11 @@ contract PhygitalAsset is ERC725Y {
     /**
      * Resets the ownership verification status to false
      */
-    function transferTo(address newOwner) external onlyContainingCollection {
+    function resetOwnershipVerificationAfterTransfer()
+        external
+        onlyContainingCollection
+    {
         verifiedOwnership = false;
-        transferOwnership(newOwner);
     }
 
     /**

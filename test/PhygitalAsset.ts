@@ -76,11 +76,11 @@ describe("PhygitalAsset", function () {
   }
 
   describe("Deployment", function () {
-    it("Should set the 'collection' to the creating PhygitalAssetCollection contract instance", async function () {
-      const { phygitalAssetCollectionContractAddress, phygitalAsset } =
+    it("Should set the 'owner' to the creating PhygitalAssetCollection contract instance", async function () {
+      const { phygitalAsset, phygitalAssetCollectionContractAddress } =
         await loadFixture(deployFixture);
 
-      expect(await phygitalAsset.collection()).to.equal(
+      expect(await phygitalAsset.owner()).to.equal(
         phygitalAssetCollectionContractAddress
       );
     });
@@ -92,13 +92,11 @@ describe("PhygitalAsset", function () {
     });
 
     it("Should revert with the the custom error NotContainingPhygitalAssetCollection if the phygital was not created by an contract instance of type PhygitalAssetCollection", async function () {
-      const { phygitalId, phygitalOwner } = await loadFixture(deployFixture);
+      const { phygitalId } = await loadFixture(deployFixture);
 
       const PhygitalAsset = await ethers.getContractFactory("PhygitalAsset");
 
-      await expect(
-        PhygitalAsset.deploy(phygitalId, phygitalOwner.universalProfileAddress)
-      ).to.be.reverted;
+      await expect(PhygitalAsset.deploy(phygitalId)).to.be.reverted;
     });
   });
 
@@ -159,11 +157,11 @@ describe("PhygitalAsset", function () {
     });
   });
 
-  describe("function owner() public view virtual returns (address)", function () {
+  describe("function phygitalOwner() public view returns (address)", function () {
     it("Should be the initial 'phygital owner' after mint", async function () {
       const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
 
-      expect(await phygitalAsset.owner()).to.equal(
+      expect(await phygitalAsset.phygitalOwner()).to.equal(
         phygitalOwner.universalProfileAddress
       );
     });
@@ -180,20 +178,18 @@ describe("PhygitalAsset", function () {
         )
       ).not.to.be.reverted;
 
-      expect(await phygitalAsset.owner()).to.equal(
+      expect(await phygitalAsset.phygitalOwner()).to.equal(
         collectionOwner.universalProfileAddress
       );
     });
   });
 
-  describe("function transferTo(address newOwner) external onlyContainingCollection", function () {
+  describe("function resetOwnershipVerificationAfterTransfer() external onlyContainingCollection", function () {
     it("Should revert with the the custom error NotContainingPhygitalAssetCollection if the function is not called by the containing PhygitalAssetCollection contract instance", async function () {
-      const { phygitalAsset, collectionOwner } = await loadFixture(
-        deployFixture
-      );
+      const { phygitalAsset } = await loadFixture(deployFixture);
 
       await expect(
-        phygitalAsset.transferTo(collectionOwner.universalProfileAddress)
+        phygitalAsset.resetOwnershipVerificationAfterTransfer()
       ).to.be.revertedWithCustomError(
         phygitalAsset,
         "NotContainingPhygitalAssetCollection"
