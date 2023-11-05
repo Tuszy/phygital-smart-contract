@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import {PhygitalAsset} from "./PhygitalAsset.sol";
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {LSP8Enumerable} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Enumerable.sol";
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
 import {LSP8IdentifiableDigitalAssetCore} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol";
@@ -22,6 +23,7 @@ import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_AS
  * @dev Contract module represents a phygital asset collection.
  */
 contract PhygitalAssetCollection is LSP8Enumerable {
+    using ECDSA for bytes32;
     /**
      * @notice Root of the merkle tree which represents the phygital asset collection
      */
@@ -138,48 +140,17 @@ contract PhygitalAssetCollection is LSP8Enumerable {
         bytes32 hashedPhygitalOwnerAddress = keccak256(
             abi.encodePacked(phygitalOwner)
         );
-        return
-            keccak256(
-                abi.encodePacked(
-                    _recoverSigner(
-                        hashedPhygitalOwnerAddress,
-                        phygitalSignature
-                    )
-                )
-            ) == phygitalId;
-    }
-
-    /**
-     * @notice Recovers the signer
-     *
-     * @param _messageHash hashed message
-     * @param _signature signature
-     *
-     */
-    function _recoverSigner(
-        bytes32 _messageHash,
-        bytes memory _signature
-    ) public pure returns (address) {
-        (bytes32 r, bytes32 s, uint8 v) = _splitSignature(_signature);
-
-        return ecrecover(_messageHash, v, r, s);
-    }
-
-    /**
-     * @notice Splits the 65 byte signature into r, s and v.
-     *
-     * @param _signature signature
-     */
-    function _splitSignature(
-        bytes memory _signature
-    ) public pure returns (bytes32 r, bytes32 s, uint8 v) {
-        require(_signature.length == 65, "invalid signature length");
-
-        assembly {
-            r := mload(add(_signature, 32))
-            s := mload(add(_signature, 64))
-            v := byte(0, mload(add(_signature, 96)))
-        }
+        (
+            address phygitalAddress,
+            ECDSA.RecoverError recoverError,
+            bytes32 signatureLength
+        ) = hashedPhygitalOwnerAddress.tryRecover(phygitalSignature);
+        if (ECDSA.RecoverError.NoError != recoverError)
+            revert PhygitalAssetOwnershipVerificationFailed(
+                phygitalOwner,
+                phygitalId
+            );
+        return keccak256(abi.encodePacked(phygitalAddress)) == phygitalId;
     }
 
     /**
