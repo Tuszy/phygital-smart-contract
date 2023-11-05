@@ -2,8 +2,7 @@ import { Wallet } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { getLSP2JSONURL, keccak256 } from "./util";
 import keyPairs from "./key-pairs";
-
-export const ipfsURL = "ipfs://QmXGywSvgx6SJkvR5CqHjTenFUzmm1gh4ASwWDSyQyFNdZ";
+import phygitalAssetCollectionLSP4Metadata from "./phygital-asset-collection-lsp4-metadata.json";
 
 export const publicKeyList = [
   "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
@@ -24,7 +23,19 @@ export const publicKeyList = [
   "0xbDA5747bFD65F08deb54cb465eB87D40e51B197E",
 ];
 
-export const merkleTreeLSP2JSONURL = getLSP2JSONURL(publicKeyList, ipfsURL);
+export const merkleTreeLSP2IpfsURL =
+  "ipfs://QmXGywSvgx6SJkvR5CqHjTenFUzmm1gh4ASwWDSyQyFNdZ";
+export const merkleTreeLSP2JSONURL = getLSP2JSONURL(
+  publicKeyList,
+  merkleTreeLSP2IpfsURL
+);
+
+export const phygitalAssetCollectionLSP4MetadataIpfsURL =
+  "ipfs://QmXnVhSYvUsVTQ8TrRaX9ABmDC5W8HyTxKCcjAFySixKUF";
+export const phygitalAssetCollectionLSP4MetadataJSONURL = getLSP2JSONURL(
+  phygitalAssetCollectionLSP4Metadata,
+  phygitalAssetCollectionLSP4MetadataIpfsURL
+);
 
 export const createMerkleTree = (publicKeyList: string[]) =>
   new MerkleTree(publicKeyList.map(keccak256("address")), keccak256("bytes"));

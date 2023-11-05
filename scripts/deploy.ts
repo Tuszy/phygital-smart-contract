@@ -2,6 +2,7 @@ import { ethers } from "hardhat";
 import {
   merkleTreeLSP2JSONURL,
   merkleTreeRoot,
+  phygitalAssetCollectionLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
 
 async function main() {
@@ -14,6 +15,7 @@ async function main() {
       merkleTreeLSP2JSONURL,
       "Sneaker",
       "SNKR",
+      phygitalAssetCollectionLSP4MetadataJSONURL,
       collectionOwner.address,
     ]
   );

@@ -9,6 +9,7 @@ import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts
 import {LSP8IdentifiableDigitalAssetCore} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol";
 import {LSP8NotTokenOwner, LSP8TokenIdAlreadyMinted} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {_LSP8_TOKENID_TYPE_ADDRESS} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
+import {_LSP4_METADATA_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} from "./PhygitalAssetConstants.sol";
 
@@ -48,6 +49,7 @@ contract PhygitalAssetCollection is LSP8Enumerable {
         bytes memory merkleTreeJSONURL_,
         string memory name_,
         string memory symbol_,
+        bytes memory metadataJSONURL_,
         address collectionOwner_
     )
         LSP8IdentifiableDigitalAsset(
@@ -62,6 +64,7 @@ contract PhygitalAssetCollection is LSP8Enumerable {
             _PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY,
             merkleTreeJSONURL_
         );
+        setData(_LSP4_METADATA_KEY, metadataJSONURL_);
     }
 
     /**

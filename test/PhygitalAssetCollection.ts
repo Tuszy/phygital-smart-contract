@@ -5,6 +5,7 @@ import { ethers } from "hardhat";
 import {
   getVerificationDataForPhygital,
   merkleTreeLSP2JSONURL,
+  phygitalAssetCollectionLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
 
 import { merkleTreeRoot } from "../test-data/merkle-tree";
@@ -17,6 +18,8 @@ const LSP4TokenName =
   "0xdeba1e292f8ba88238e10ab3c7f88bd4be4fac56cad5194b6ecceaf653468af1";
 const LSP4TokenSymbol =
   "0x2f0a68ab07768e01943a599e73362a0e17a63a72e94dd2e384d2c1d4db932756";
+const LSP4Metadata =
+  "0x9afb95cacc9f95858ec44aa8c3b685511002e30ae54415823f406128b85b238e";
 const LSP8TokenIdTypeKey =
   "0x715f248956de7ce65e94d9d836bfead479f7e70d69b718d47bfe7b00e05b4fe4";
 const LSP8TokenIdTypeAddress = 4;
@@ -40,6 +43,7 @@ describe("PhygitalAssetCollection", function () {
       phygitalCollectionMerkleTreeJSONURL,
       phygitalAssetCollectionName,
       phygitalAssetCollectionSymbol,
+      phygitalAssetCollectionLSP4MetadataJSONURL,
       owner.address
     );
 
@@ -52,6 +56,7 @@ describe("PhygitalAssetCollection", function () {
       phygitalAssetCollectionName,
       phygitalAssetCollectionSymbol,
       phygitalCollectionMerkleTreeJSONURL,
+      phygitalAssetCollectionLSP4MetadataJSONURL,
       merkleRootOfCollection,
       collectionOwner,
       phygitalOwner,
@@ -99,6 +104,17 @@ describe("PhygitalAssetCollection", function () {
           PhygitalAssetCollectionMerkleTreeURI
         )
       ).to.equal(phygitalCollectionMerkleTreeJSONURL);
+    });
+
+    it("Should set the right lsp4 metadata json url", async function () {
+      const {
+        phygitalAssetCollection,
+        phygitalAssetCollectionLSP4MetadataJSONURL,
+      } = await loadFixture(deployFixture);
+
+      expect(await phygitalAssetCollection.getData(LSP4Metadata)).to.equal(
+        phygitalAssetCollectionLSP4MetadataJSONURL
+      );
     });
 
     it("Should set the token id type to address", async function () {

@@ -5,6 +5,7 @@ import { ethers } from "hardhat";
 import {
   getVerificationDataForPhygital,
   merkleTreeLSP2JSONURL,
+  phygitalAssetCollectionLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
 import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
 import { merkleTreeRoot } from "../test-data/merkle-tree";
@@ -23,6 +24,7 @@ describe("PhygitalAsset", function () {
       merkleTreeLSP2JSONURL,
       "Sneaker",
       "SNKR",
+      phygitalAssetCollectionLSP4MetadataJSONURL,
       owner.address
     );
 
