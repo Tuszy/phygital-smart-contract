@@ -2,7 +2,7 @@
 import { ethers, lspFactory } from "hardhat";
 
 // Types
-import type { AddressLike, BytesLike, BigNumberish } from "ethers";
+import type { AddressLike, BytesLike, BigNumberish, Interface } from "ethers";
 import type { HardhatEthersSigner } from "../node_modules/@nomicfoundation/hardhat-ethers/signers";
 
 // ABI
@@ -10,7 +10,7 @@ import { abi as LSP0ERC725AccountABI } from "@lukso/lsp-smart-contracts/artifact
 import { abi as LSP6KeyManagerABI } from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
 import { abi as PhygitalAssetCollectionABI } from "../artifacts/contracts/PhygitalAssetCollection.sol/PhygitalAssetCollection.json";
 import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
-import { PhygitalAsset } from "../typechain-types";
+import { PhygitalAssetCollection } from "../typechain-types";
 import { getInterfaceID } from "./util";
 
 console.log(
@@ -24,18 +24,20 @@ console.log(
 
 export const createUniversalProfile = async (
   universalProfileOwner: HardhatEthersSigner,
-  phygitalAsset: PhygitalAsset
+  phygitalAssetCollection: PhygitalAssetCollection
 ) => {
-  const phygitalAsserContractAddress = await phygitalAsset.getAddress();
   const universalProfile = await lspFactory.UniversalProfile.deploy({
     controllerAddresses: [universalProfileOwner.address],
   });
 
   const universalProfileAddress = universalProfile.LSP0ERC725Account.address;
 
-  const PhygitalAssetInterface = new ethers.Interface(
+  const phygitalAssetCollectionContractAddress =
+    await phygitalAssetCollection.getAddress();
+  const PhygitalAssetCollectionInterface = new ethers.Interface(
     PhygitalAssetCollectionABI
   );
+  const PhygitalAssetInterface = new ethers.Interface(PhygitalAssetABI);
   const LSP0ERC725AccountABIInterface = new ethers.Interface(
     LSP0ERC725AccountABI
   );
@@ -46,16 +48,18 @@ export const createUniversalProfile = async (
     universalProfileOwner
   );
   const executeCallThroughKeyManager = async (
+    contractInterface: Interface,
+    contractAddress: AddressLike,
     functionName: string,
     ...params: any[]
   ) => {
-    const encodedPhygitalAssetCall = PhygitalAssetInterface.encodeFunctionData(
+    const encodedInterfaceCall = contractInterface.encodeFunctionData(
       functionName,
       params
     );
     const encodedExecuteCall = LSP0ERC725AccountABIInterface.encodeFunctionData(
       "execute",
-      [0, phygitalAsserContractAddress, 0, encodedPhygitalAssetCall]
+      [0, contractAddress, 0, encodedInterfaceCall]
     );
     const tx = await LSP6KeyManager.execute(encodedExecuteCall);
     await tx.wait();
@@ -70,6 +74,8 @@ export const createUniversalProfile = async (
     force: boolean
   ) =>
     await executeCallThroughKeyManager(
+      PhygitalAssetCollectionInterface,
+      phygitalAssetCollectionContractAddress,
       "mint",
       phygitalId,
       phygitalIndex,
@@ -79,12 +85,13 @@ export const createUniversalProfile = async (
     );
 
   const verifyOwnershipAfterTransfer = async (
-    phygitalId: BytesLike,
+    phygitalAssetContractAddress: AddressLike,
     phygitalSignature: BytesLike
   ) =>
     await executeCallThroughKeyManager(
+      PhygitalAssetInterface,
+      phygitalAssetContractAddress,
       "verifyOwnershipAfterTransfer",
-      phygitalId,
       phygitalSignature
     );
 
@@ -94,6 +101,8 @@ export const createUniversalProfile = async (
     force: boolean
   ) =>
     await executeCallThroughKeyManager(
+      PhygitalAssetCollectionInterface,
+      phygitalAssetCollectionContractAddress,
       "transfer",
       universalProfileAddress,
       newPhygitalOwner,
@@ -116,13 +125,15 @@ export const createUniversalProfile = async (
 // Local constant
 const MAX_ACCOUNTS = 10;
 export const getOwnerAndUniversalProfiles = async (
-  phygitalAsset: PhygitalAsset
+  phygitalAssetCollection: PhygitalAssetCollection
 ) => {
   const signers = await ethers.getSigners();
 
   const accounts = [];
   for (let i = 0; i < MAX_ACCOUNTS && i < signers.length; i++) {
-    accounts.push(await createUniversalProfile(signers[i], phygitalAsset));
+    accounts.push(
+      await createUniversalProfile(signers[i], phygitalAssetCollection)
+    );
   }
 
   return accounts;

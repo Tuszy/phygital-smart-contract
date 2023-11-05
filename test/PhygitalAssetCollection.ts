@@ -466,6 +466,8 @@ describe("PhygitalAssetCollection", function () {
           )
         ).not.to.be.reverted;
 
+        const phygitalContractAddress =
+          await phygitalAssetCollection.phygitalIdToContractAddress(phygitalId);
         const tokenId = ethers.zeroPadValue(
           await phygitalAssetCollection.phygitalIdToContractAddress(phygitalId),
           32
@@ -487,7 +489,7 @@ describe("PhygitalAssetCollection", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            tokenId,
+            phygitalContractAddress,
             phygitalSignature2
           )
         ).not.to.be.reverted;
