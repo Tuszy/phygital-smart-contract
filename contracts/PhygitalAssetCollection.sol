@@ -13,9 +13,10 @@ import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_AS
 
 /**
  * @title Phygital Asset Collection Implementation.
- * A phygital asset is represented by an asymmetric key pair and an index which is equal to the position in the merkle tree (= collection).
+ * A phygital asset is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the merkle tree leaf layer (= "collection").
  * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership (e.g. during minting).
- * The id of the phygital results form the keccak256 hash of the public key (= phygital address).
+ * The so called 'phygital id' results from the keccak256 hash of the phygital address. Attention: The 'phygital id' is NOT equal to the 'tokenId'.
+ * Minting a phygital creates an instance of type PhygitalAsset. The resulting contract address is casted to bytes32 and used/referred as the 'tokenId'.
  * @author Dennis Tuszynski
  * @dev Contract module represents a phygital asset collection.
  */
@@ -23,7 +24,7 @@ contract PhygitalAssetCollection is LSP8Enumerable {
     /**
      * @notice Root of the merkle tree which represents the phygital asset collection
      */
-    bytes32 public merkleRootOfCollection;
+    bytes32 public immutable merkleRootOfCollection;
 
     /**
      * @notice Maps the phygital ids (keccak256 hashed public key of nfc tag or qr code) to the corresponding contract addresses
