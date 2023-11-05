@@ -9,7 +9,6 @@ import {
 import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
 import { merkleTreeRoot } from "../test-data/merkle-tree";
 import { getUniversalProfiles } from "../test-data/universal-profile";
-import { keccak256 } from "../test-data/util";
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
@@ -106,6 +105,63 @@ describe("PhygitalAsset", function () {
       await expect(
         PhygitalAsset.deploy(phygitalId, phygitalOwner.universalProfileAddress)
       ).to.be.reverted;
+    });
+  });
+
+  describe("bool public verifiedOwnership", function () {
+    it("Should be true after mint", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(await phygitalAsset.verifiedOwnership()).to.equal(true);
+    });
+
+    it("Should be false after transfer", async function () {
+      const { phygitalOwner, collectionOwner, tokenId, phygitalAsset } =
+        await loadFixture(deployFixture);
+
+      await expect(
+        phygitalOwner.transfer(
+          collectionOwner.universalProfileAddress,
+          tokenId,
+          false
+        )
+      ).not.to.be.reverted;
+
+      expect(await phygitalAsset.verifiedOwnership()).to.equal(false);
+    });
+
+    it("Should be true after verifying post transfer", async function () {
+      const {
+        phygitalOwner,
+        collectionOwner,
+        tokenId,
+        phygitalAsset,
+        phygitalIndex,
+        phygitalAssetContractAddress,
+      } = await loadFixture(deployFixture);
+
+      await expect(
+        phygitalOwner.transfer(
+          collectionOwner.universalProfileAddress,
+          tokenId,
+          false
+        )
+      ).not.to.be.reverted;
+
+      const { phygitalSignature: phygitalSignature2 } =
+        getVerificationDataForPhygital(
+          phygitalIndex,
+          collectionOwner.universalProfileAddress
+        );
+
+      await expect(
+        collectionOwner.verifyOwnershipAfterTransfer(
+          phygitalAssetContractAddress,
+          phygitalSignature2
+        )
+      ).not.to.be.reverted;
+
+      expect(await phygitalAsset.verifiedOwnership()).to.equal(true);
     });
   });
 
