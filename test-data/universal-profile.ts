@@ -110,7 +110,7 @@ export const createUniversalProfile = async (
 };
 
 // Local constant
-const MAX_ACCOUNTS = 10;
+const MAX_ACCOUNTS = 5;
 export const getUniversalProfiles = async (phygitalAsset: PhygitalAsset) => {
   const signers = await ethers.getSigners();
 
