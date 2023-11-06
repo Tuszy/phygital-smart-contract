@@ -55,16 +55,27 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   networks: {
-    lukso: {
-      url: "https://rpc.l16.lukso.network",
-      chainId: 2828,
+    LuksoMainnet: {
+      url:
+        process.env.RPC_URL_MAINNET && process.env.RPC_URL_API_KEY_MAINNET
+          ? `${process.env.RPC_URL_MAINNET}?apiKey=${process.env.RPC_URL_API_KEY_MAINNET}`
+          : "https://rpc.lukso.gateway.fm",
+      chainId: 42,
+      accounts: [process.env.PRIVATE_KEY ?? DEFAULT_PRIVATE_KEY],
+    },
+    LuksoTestnet: {
+      url:
+        process.env.RPC_URL_TESTNET && process.env.RPC_URL_API_KEY_TESTNET
+          ? `${process.env.RPC_URL_TESTNET}?apiKey=${process.env.RPC_URL_API_KEY_TESTNET}`
+          : "https://rpc.testnet.lukso.gateway.fm",
+      chainId: 4201,
       accounts: [process.env.PRIVATE_KEY ?? DEFAULT_PRIVATE_KEY],
     },
     hardhat: {
       chainId: 1337,
       accounts: [
         {
-          privateKey: process.env.PRIVATE_KEY ?? DEFAULT_PRIVATE_KEY,
+          privateKey: DEFAULT_PRIVATE_KEY,
           balance: "10000000000000000000000", // 10000 ETH
         },
         {
