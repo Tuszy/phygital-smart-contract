@@ -15,7 +15,7 @@ import {_LSP4_METADATA_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP4Digit
 
 // Local
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
-import {_PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_ASSET_COLLECTION} from "./PhygitalAssetConstants.sol";
+import {_PHYGITAL_ASSET_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from "./PhygitalAssetConstants.sol";
 
 /**
  * @title Phygital Asset Collection Implementation.
@@ -63,10 +63,7 @@ contract PhygitalAsset is LSP8Enumerable {
         )
     {
         merkleRootOfCollection = merkleRootOfCollection_;
-        _setData(
-            _PHYGITAL_ASSET_COLLECTION_MERKLE_TREE_URI_KEY,
-            merkleTreeJSONURL_
-        );
+        _setData(_PHYGITAL_ASSET_MERKLE_TREE_URI_KEY, merkleTreeJSONURL_);
         setData(_LSP4_METADATA_KEY, metadataJSONURL_);
     }
 
@@ -285,7 +282,7 @@ contract PhygitalAsset is LSP8Enumerable {
         returns (bool)
     {
         return
-            interfaceId == _INTERFACEID_PHYGITAL_ASSET_COLLECTION ||
+            interfaceId == _INTERFACEID_PHYGITAL_ASSET ||
             super.supportsInterface(interfaceId);
     }
 }
