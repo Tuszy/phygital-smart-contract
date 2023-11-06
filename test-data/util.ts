@@ -28,7 +28,7 @@ export const getLSP2JSONURL = (json: Object, ipfsURL: string): string => {
   return jsonURL;
 };
 
-export const getInterfaceID = (contractInterface: Interface) => {
+export const getInterfaceId = (contractInterface: Interface) => {
   let interfaceID = toBigInt(0);
   contractInterface.forEachFunction(
     (func) => (interfaceID ^= toBigInt(func.selector))

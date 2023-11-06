@@ -4,18 +4,17 @@ import { ethers, lspFactory } from "hardhat";
 // Types
 import type { AddressLike, BytesLike, BigNumberish, Interface } from "ethers";
 import type { HardhatEthersSigner } from "../node_modules/@nomicfoundation/hardhat-ethers/signers";
-
-// ABI
-import { abi as LSP0ERC725AccountABI } from "@lukso/lsp-smart-contracts/artifacts/LSP0ERC725Account.json";
-import { abi as LSP6KeyManagerABI } from "@lukso/lsp-smart-contracts/artifacts/LSP6KeyManager.json";
-import { abi as PhygitalAssetABI } from "../artifacts/contracts/PhygitalAsset.sol/PhygitalAsset.json";
 import { PhygitalAsset } from "../typechain-types";
-import { getInterfaceID } from "./util";
 
-console.log(
-  "PhygitalAsset ERC165 Interface ID:",
-  getInterfaceID(new ethers.Interface(PhygitalAssetABI))
-);
+// Constants
+import { OPERATION_TYPES } from "@lukso/lsp-smart-contracts";
+
+// Interfaces
+import {
+  LSP0ERC725AccountABIInterface,
+  LSP6KeyManagerInterface,
+  PhygitalAssetInterface,
+} from "./Interfaces";
 
 export const createUniversalProfile = async (
   universalProfileOwner: HardhatEthersSigner,
@@ -28,14 +27,10 @@ export const createUniversalProfile = async (
   const universalProfileAddress = universalProfile.LSP0ERC725Account.address;
 
   const phygitalAssetContractAddress = await phygitalAsset.getAddress();
-  const PhygitalAssetInterface = new ethers.Interface(PhygitalAssetABI);
-  const LSP0ERC725AccountABIInterface = new ethers.Interface(
-    LSP0ERC725AccountABI
-  );
 
   const LSP6KeyManager = new ethers.Contract(
     universalProfile.LSP6KeyManager.address,
-    LSP6KeyManagerABI,
+    LSP6KeyManagerInterface,
     universalProfileOwner
   );
   const executeCallThroughKeyManager = async (
@@ -50,7 +45,7 @@ export const createUniversalProfile = async (
     );
     const encodedExecuteCall = LSP0ERC725AccountABIInterface.encodeFunctionData(
       "execute",
-      [0, contractAddress, 0, encodedInterfaceCall]
+      [OPERATION_TYPES.CALL, contractAddress, 0, encodedInterfaceCall]
     );
     const tx = await LSP6KeyManager.execute(encodedExecuteCall);
     await tx.wait();

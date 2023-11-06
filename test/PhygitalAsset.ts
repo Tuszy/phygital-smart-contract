@@ -1,28 +1,31 @@
+// Crypto
+import { ethers } from "hardhat";
+
+// Test
 import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
-import { ethers } from "hardhat";
+
+// Merkle Tree
 import {
   getVerificationDataForPhygital,
   merkleTreeLSP2JSONURL,
-  phygitalAssetLSP4MetadataJSONURL,
+  phygitalAssetLSP4MetadataLSP2JSONURL,
 } from "../test-data/merkle-tree";
-
 import { merkleTreeRoot } from "../test-data/merkle-tree";
+
+// Universal Profile
 import { getUniversalProfiles } from "../test-data/universal-profile";
+
+// Constants
+import {
+  ERC725YDataKeys,
+  LSP8_TOKEN_ID_TYPES,
+} from "@lukso/lsp-smart-contracts";
 
 // see schemas/PhygitalAsset.json
 const PhygitalAssetMerkleTreeURI =
   "0xfa63cf7cc74d89e899b47715d2763037563ff1d3734dbd6c3214ccb296d938c0";
-const LSP4TokenName =
-  "0xdeba1e292f8ba88238e10ab3c7f88bd4be4fac56cad5194b6ecceaf653468af1";
-const LSP4TokenSymbol =
-  "0x2f0a68ab07768e01943a599e73362a0e17a63a72e94dd2e384d2c1d4db932756";
-const LSP4Metadata =
-  "0x9afb95cacc9f95858ec44aa8c3b685511002e30ae54415823f406128b85b238e";
-const LSP8TokenIdTypeKey =
-  "0x715f248956de7ce65e94d9d836bfead479f7e70d69b718d47bfe7b00e05b4fe4";
-const LSP8TokenIdTypeHash = 3;
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
@@ -41,7 +44,7 @@ describe("PhygitalAsset", function () {
       phygitalCollectionMerkleTreeJSONURL,
       phygitalAssetName,
       phygitalAssetSymbol,
-      phygitalAssetLSP4MetadataJSONURL,
+      phygitalAssetLSP4MetadataLSP2JSONURL,
       owner.address
     );
 
@@ -54,7 +57,7 @@ describe("PhygitalAsset", function () {
       phygitalAssetName,
       phygitalAssetSymbol,
       phygitalCollectionMerkleTreeJSONURL,
-      phygitalAssetLSP4MetadataJSONURL,
+      phygitalAssetLSP4MetadataLSP2JSONURL,
       merkleRootOfCollection,
       collectionOwner,
       phygitalOwner,
@@ -78,7 +81,9 @@ describe("PhygitalAsset", function () {
       );
 
       expect(
-        ethers.toUtf8String(await phygitalAsset.getData(LSP4TokenName))
+        ethers.toUtf8String(
+          await phygitalAsset.getData(ERC725YDataKeys.LSP4.LSP4TokenName)
+        )
       ).to.equal(phygitalAssetName);
     });
 
@@ -88,7 +93,9 @@ describe("PhygitalAsset", function () {
       );
 
       expect(
-        ethers.toUtf8String(await phygitalAsset.getData(LSP4TokenSymbol))
+        ethers.toUtf8String(
+          await phygitalAsset.getData(ERC725YDataKeys.LSP4.LSP4TokenSymbol)
+        )
       ).to.equal(phygitalAssetSymbol);
     });
 
@@ -102,20 +109,20 @@ describe("PhygitalAsset", function () {
     });
 
     it("Should set the right lsp4 metadata json url", async function () {
-      const { phygitalAsset, phygitalAssetLSP4MetadataJSONURL } =
+      const { phygitalAsset, phygitalAssetLSP4MetadataLSP2JSONURL } =
         await loadFixture(deployFixture);
 
-      expect(await phygitalAsset.getData(LSP4Metadata)).to.equal(
-        phygitalAssetLSP4MetadataJSONURL
-      );
+      expect(
+        await phygitalAsset.getData(ERC725YDataKeys.LSP4.LSP4Metadata)
+      ).to.equal(phygitalAssetLSP4MetadataLSP2JSONURL);
     });
 
     it("Should set the token id type to address", async function () {
       const { phygitalAsset } = await loadFixture(deployFixture);
 
-      expect(await phygitalAsset.getData(LSP8TokenIdTypeKey)).to.equal(
-        BigInt(LSP8TokenIdTypeHash)
-      );
+      expect(
+        await phygitalAsset.getData(ERC725YDataKeys.LSP8.LSP8TokenIdType)
+      ).to.equal(BigInt(LSP8_TOKEN_ID_TYPES.HASH));
     });
 
     it("Should set the right owner", async function () {

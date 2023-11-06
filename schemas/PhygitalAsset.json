@@ -43,7 +43,7 @@
   },
   {
     "name": "PhygitalAssetMerkleTreeURI",
-    "key": "0x931b4f026a670558cbd3aeba98023d97e4910a7f5be2441e3f9ec1c5c5a1001f",
+    "key": "0xfa63cf7cc74d89e899b47715d2763037563ff1d3734dbd6c3214ccb296d938c0",
     "keyType": "Singleton",
     "valueType": "bytes",
     "valueContent": "JSONURL"
