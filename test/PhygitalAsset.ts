@@ -13,7 +13,7 @@ import { getUniversalProfiles } from "../test-data/universal-profile";
 
 // see schemas/PhygitalAsset.json
 const PhygitalAssetMerkleTreeURI =
-  "0x931b4f026a670558cbd3aeba98023d97e4910a7f5be2441e3f9ec1c5c5a1001f";
+  "0xfa63cf7cc74d89e899b47715d2763037563ff1d3734dbd6c3214ccb296d938c0";
 const LSP4TokenName =
   "0xdeba1e292f8ba88238e10ab3c7f88bd4be4fac56cad5194b6ecceaf653468af1";
 const LSP4TokenSymbol =
