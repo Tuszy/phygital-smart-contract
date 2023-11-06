@@ -9,10 +9,10 @@ import { expect } from "chai";
 // Merkle Tree
 import {
   getVerificationDataForPhygital,
-  merkleTreeLSP2JSONURL,
-  phygitalAssetLSP4MetadataLSP2JSONURL,
+  phygitalCollectionJSONURL,
+  phygitalAssetLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
-import { merkleTreeRoot } from "../test-data/merkle-tree";
+import { merkleRoot } from "../test-data/merkle-tree";
 
 // Universal Profile
 import { getUniversalProfiles } from "../test-data/universal-profile";
@@ -24,27 +24,25 @@ import {
 } from "@lukso/lsp-smart-contracts";
 
 // see schemas/PhygitalAsset.json
-const PhygitalAssetMerkleTreeURI =
-  "0xfa63cf7cc74d89e899b47715d2763037563ff1d3734dbd6c3214ccb296d938c0";
+const PhygitalAssetCollectionURI =
+  "0x4eff76d745d12fd5e5f7b38e8f396dd0d099124739e69a289ca1faa7ebc53768";
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
     const [owner] = await ethers.getSigners();
 
-    const merkleRootOfCollection = merkleTreeRoot;
+    const merkleRootOfCollection = merkleRoot;
 
     const phygitalAssetName = "Sneaker";
     const phygitalAssetSymbol = "SNKR";
 
-    const phygitalCollectionMerkleTreeJSONURL = merkleTreeLSP2JSONURL;
-
     const PhygitalAsset = await ethers.getContractFactory("PhygitalAsset");
     const phygitalAsset = await PhygitalAsset.deploy(
       merkleRootOfCollection,
-      phygitalCollectionMerkleTreeJSONURL,
+      phygitalCollectionJSONURL,
       phygitalAssetName,
       phygitalAssetSymbol,
-      phygitalAssetLSP4MetadataLSP2JSONURL,
+      phygitalAssetLSP4MetadataJSONURL,
       owner.address
     );
 
@@ -56,8 +54,8 @@ describe("PhygitalAsset", function () {
       phygitalAsset,
       phygitalAssetName,
       phygitalAssetSymbol,
-      phygitalCollectionMerkleTreeJSONURL,
-      phygitalAssetLSP4MetadataLSP2JSONURL,
+      phygitalCollectionJSONURL,
+      phygitalAssetLSP4MetadataJSONURL,
       merkleRootOfCollection,
       collectionOwner,
       phygitalOwner,
@@ -99,22 +97,23 @@ describe("PhygitalAsset", function () {
       ).to.equal(phygitalAssetSymbol);
     });
 
-    it("Should set the right phygital collection merkle tree json url", async function () {
-      const { phygitalAsset, phygitalCollectionMerkleTreeJSONURL } =
-        await loadFixture(deployFixture);
+    it("Should set the right phygital collection json url", async function () {
+      const { phygitalAsset, phygitalCollectionJSONURL } = await loadFixture(
+        deployFixture
+      );
 
-      expect(await phygitalAsset.getData(PhygitalAssetMerkleTreeURI)).to.equal(
-        phygitalCollectionMerkleTreeJSONURL
+      expect(await phygitalAsset.getData(PhygitalAssetCollectionURI)).to.equal(
+        phygitalCollectionJSONURL
       );
     });
 
     it("Should set the right lsp4 metadata json url", async function () {
-      const { phygitalAsset, phygitalAssetLSP4MetadataLSP2JSONURL } =
+      const { phygitalAsset, phygitalAssetLSP4MetadataJSONURL } =
         await loadFixture(deployFixture);
 
       expect(
         await phygitalAsset.getData(ERC725YDataKeys.LSP4.LSP4Metadata)
-      ).to.equal(phygitalAssetLSP4MetadataLSP2JSONURL);
+      ).to.equal(phygitalAssetLSP4MetadataJSONURL);
     });
 
     it("Should set the token id type to address", async function () {

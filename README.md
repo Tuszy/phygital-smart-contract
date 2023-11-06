@@ -4,8 +4,8 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
 
 ## Overview
 
-- A Phygital Asset collection (= extended LSP8 contract) is comprised of a specified amount of phygitals (= LSP8 tokens), whose ids are included in a merkle tree to verify their validity/existence during minting (similar to a whitelist)
-- A Phygital (= LSP8 token) is represented by an asymmetric key-pair (e.g. stored in a NFC tag or QR code) and an index that is equal to the position in the merkle tree leaf layer (= list of available phygitals)
+- A Phygital Asset (= extended LSP8 contract) is comprised of a specified amount of phygitals (= LSP8 tokens), whose ids are included in a merkle tree (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist)
+- A Phygital (= LSP8 token) is represented by an asymmetric key-pair (e.g. stored in a NFC tag or QR code) and an index that is equal to the position in the collection
   - The *public key* is called **Phygital address**
   - The *private key* is used to sign the **Phygital Owner** (= owner's universal profile address) to verify the ownership, e.g. during minting and after transfers
   - The **Phygital Id** results from the *keccak256* hash of the *phygital address* (= LSP8 token id of type *hash*)
@@ -14,15 +14,15 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
 ## Manual
 ### Steps to create **PhygitalAsset**
    1. Upload LSP4 metadata to IPFS and create LSP2 JSONURL
-   2. Compile list of phygital ids and create a merkle tree
-   3. Upload merkle tree to IPFS and create LSP2 JSONURL
-   4. Calculate merkle root
+   2. Compile list of phygital ids (= phygital collection)
+   3. Upload the collection to IPFS and create a LSP2 JSONURL
+   4. Calculate the merkle root for the collection
    5. Deploy PhygitalAsset contract instance with the prepared data
 
 ### Steps to mint **PhygitalAsset**
    1. Retrieve phygital id (e.g. from NFC tag or QR code)
    2. Sign your universal profile address with the private key of the phygital
-   3. Determine phygital index and merkle proof from merkle tree
+   3. Determine phygital index and merkle proof from the collection merkle tree
    4. Mint PhygitalAsset token with the prepared data
 
 ### Steps to verify ownership of **PhygitalAsset** after transfer

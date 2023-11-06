@@ -15,21 +15,21 @@ import {_LSP4_METADATA_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP4Digit
 
 // Local
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
-import {_PHYGITAL_ASSET_MERKLE_TREE_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from "./PhygitalAssetConstants.sol";
+import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from "./PhygitalAssetConstants.sol";
 
 /**
- * @title Phygital Asset Collection Implementation.
- * A phygital asset collection is comprised of a specified amount of phygitals, which are included in a merkle tree to verify their validity/existence during minting (similar to a whitelist).
- * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the merkle tree leaf layer (= list of available phygitals).
+ * @title Phygital Asset Implementation.
+ * A Phygital Asset is comprised of a specified amount of phygitals, whose ids are included in a merkle tree (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist).
+ * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the list of available phygitals (merkle tree leaf layer).
  * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership (e.g. during minting).
- * The so called 'phygital id' results from the keccak256 hash of the phygital address.
+ * The 'phygital id' results from the keccak256 hash of the phygital address.
  * @author Dennis Tuszynski
- * @dev Contract module represents a phygital asset collection.
+ * @dev Contract module represents a phygital asset.
  */
 contract PhygitalAsset is LSP8Enumerable {
     using ECDSA for bytes32;
     /**
-     * @notice The root of the merkle tree that represents the phygital asset collection
+     * @notice The root of the merkle tree created from the collection
      */
     bytes32 public immutable merkleRootOfCollection;
 
@@ -39,17 +39,17 @@ contract PhygitalAsset is LSP8Enumerable {
     mapping(bytes32 => bool) public verifiedOwnership;
 
     /**
-     * @notice Constructs a phygital asset collection
+     * @notice Constructs a phygital asset
      *
-     * @param merkleRootOfCollection_ The root of the merkle tree that represents the phygital asset collection
-     * @param merkleTreeJSONURL_ The url pointing to the json containing the merkle tree
+     * @param merkleRootOfCollection_ The root of the merkle tree
+     * @param collectionJSONURL_ The url pointing to the json containing the collection
      * @param name_ The name of the phygital asset
      * @param symbol_ The symbol of the phygital asset
      * @param collectionOwner_ The address of the collection owner
      */
     constructor(
         bytes32 merkleRootOfCollection_,
-        bytes memory merkleTreeJSONURL_,
+        bytes memory collectionJSONURL_,
         string memory name_,
         string memory symbol_,
         bytes memory metadataJSONURL_,
@@ -63,7 +63,7 @@ contract PhygitalAsset is LSP8Enumerable {
         )
     {
         merkleRootOfCollection = merkleRootOfCollection_;
-        _setData(_PHYGITAL_ASSET_MERKLE_TREE_URI_KEY, merkleTreeJSONURL_);
+        _setData(_PHYGITAL_ASSET_COLLECTION_URI_KEY, collectionJSONURL_);
         setData(_LSP4_METADATA_KEY, metadataJSONURL_);
     }
 
@@ -189,9 +189,9 @@ contract PhygitalAsset is LSP8Enumerable {
     /**
      * @notice Checks if the given phygital is part of the collection
      *
-     * @param merkleProofOfCollection The merkle proof for the phygital in the merkle tree (= collection)
+     * @param merkleProofOfCollection The merkle proof for the phygital in the merkle tree
      * @param phygitalId The id of the phygital (keccak256 hashed public key of nfc tag or qr code)
-     * @param phygitalIndex The index of the phygital address in the merkle tree (= collection)
+     * @param phygitalIndex The index of the phygital id in the collection
      */
     function _isPhygitalPartOfCollection(
         bytes32[] memory merkleProofOfCollection,

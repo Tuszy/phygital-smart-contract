@@ -4,19 +4,19 @@ import { getLSP2JSONURL, keccak256 } from "./util";
 import keyPairs from "./key-pairs";
 import phygitalAssetLSP4Metadata from "./phygital-asset-lsp4-metadata.json";
 
-export const phygitalAddressList = keyPairs.map((keyPair) => keyPair.publicKey);
-export const phygitalIdList = phygitalAddressList.map(keccak256("address"));
+export const phygitalCollection = keyPairs.map((keyPair) => keyPair.publicKey);
+export const phygitalIdList = phygitalCollection.map(keccak256("address"));
 
-export const merkleTreeIpfsURL =
+export const phygitalCollectionIpfsURL =
   "ipfs://QmXGywSvgx6SJkvR5CqHjTenFUzmm1gh4ASwWDSyQyFNdZ";
-export const merkleTreeLSP2JSONURL = getLSP2JSONURL(
-  phygitalAddressList,
-  merkleTreeIpfsURL
+export const phygitalCollectionJSONURL = getLSP2JSONURL(
+  phygitalCollection,
+  phygitalCollectionIpfsURL
 );
 
 export const phygitalAssetLSP4MetadataIpfsURL =
   "ipfs://QmXnVhSYvUsVTQ8TrRaX9ABmDC5W8HyTxKCcjAFySixKUF";
-export const phygitalAssetLSP4MetadataLSP2JSONURL = getLSP2JSONURL(
+export const phygitalAssetLSP4MetadataJSONURL = getLSP2JSONURL(
   phygitalAssetLSP4Metadata,
   phygitalAssetLSP4MetadataIpfsURL
 );
@@ -26,7 +26,7 @@ export const createMerkleTree = (phygitalIdList: string[]) =>
 
 export const merkleTree = createMerkleTree(phygitalIdList);
 
-export const merkleTreeRoot = "0x" + merkleTree.getRoot().toString("hex");
+export const merkleRoot = "0x" + merkleTree.getRoot().toString("hex");
 
 export const getVerificationDataForPhygital = (
   phygitalIndex: number,

@@ -1,19 +1,19 @@
 import { ethers } from "hardhat";
 import {
-  merkleTreeLSP2JSONURL,
-  merkleTreeRoot,
-  phygitalAssetLSP4MetadataLSP2JSONURL,
+  phygitalCollectionJSONURL,
+  merkleRoot,
+  phygitalAssetLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
 
 async function main() {
   const [collectionOwner] = await ethers.getSigners();
 
   const phygitalAsset = await ethers.deployContract("PhygitalAsset", [
-    merkleTreeRoot,
-    merkleTreeLSP2JSONURL,
+    merkleRoot,
+    phygitalCollectionJSONURL,
     "Sneaker",
     "SNKR",
-    phygitalAssetLSP4MetadataLSP2JSONURL,
+    phygitalAssetLSP4MetadataJSONURL,
     collectionOwner.address,
   ]);
 

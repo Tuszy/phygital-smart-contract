@@ -7,9 +7,9 @@ import { expect } from "chai";
 
 // Merkle Tree
 import {
-  merkleTreeLSP2JSONURL,
-  merkleTreeRoot,
-  phygitalAssetLSP4MetadataLSP2JSONURL,
+  phygitalCollectionJSONURL,
+  merkleRoot,
+  phygitalAssetLSP4MetadataJSONURL,
 } from "../test-data/merkle-tree";
 
 // Universal Profile
@@ -24,20 +24,18 @@ describe("Validation", function () {
   async function deployFixture() {
     const [owner] = await ethers.getSigners();
 
-    const merkleRootOfCollection = merkleTreeRoot;
+    const merkleRootOfCollection = merkleRoot;
 
     const phygitalAssetName = "Sneaker";
     const phygitalAssetSymbol = "SNKR";
 
-    const phygitalCollectionMerkleTreeJSONURL = merkleTreeLSP2JSONURL;
-
     const PhygitalAsset = await ethers.getContractFactory("PhygitalAsset");
     const phygitalAsset = await PhygitalAsset.deploy(
       merkleRootOfCollection,
-      phygitalCollectionMerkleTreeJSONURL,
+      phygitalCollectionJSONURL,
       phygitalAssetName,
       phygitalAssetSymbol,
-      phygitalAssetLSP4MetadataLSP2JSONURL,
+      phygitalAssetLSP4MetadataJSONURL,
       owner.address
     );
 
@@ -49,8 +47,8 @@ describe("Validation", function () {
       phygitalAsset,
       phygitalAssetName,
       phygitalAssetSymbol,
-      phygitalCollectionMerkleTreeJSONURL,
-      phygitalAssetLSP4MetadataLSP2JSONURL,
+      phygitalCollectionJSONURL,
+      phygitalAssetLSP4MetadataJSONURL,
       merkleRootOfCollection,
       collectionOwner,
       phygitalOwner,
