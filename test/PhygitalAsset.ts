@@ -11,8 +11,8 @@ import {
   getVerificationDataForPhygital,
   phygitalCollectionJSONURL,
   phygitalAssetLSP4MetadataJSONURL,
-} from "../test-data/merkle-tree";
-import { merkleRoot } from "../test-data/merkle-tree";
+} from "../test-data/phygital-collection";
+import { merkleRoot } from "../test-data/phygital-collection";
 
 // Universal Profile
 import { getUniversalProfiles } from "../test-data/universal-profile";

@@ -3,7 +3,7 @@ import {
   phygitalCollectionJSONURL,
   merkleRoot,
   phygitalAssetLSP4MetadataJSONURL,
-} from "../test-data/merkle-tree";
+} from "../test-data/phygital-collection";
 
 async function main() {
   const [collectionOwner] = await ethers.getSigners();
