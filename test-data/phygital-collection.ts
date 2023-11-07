@@ -27,7 +27,7 @@ export const createMerkleTree = (phygitalCollection: string[]) =>
 
 export const merkleTree = createMerkleTree(phygitalCollection);
 
-export const merkleRoot = "0x" + merkleTree.getRoot().toString("hex");
+export const merkleRoot = merkleTree.getHexRoot();
 
 export const getVerificationDataForPhygital = (
   phygitalIndex: number,
