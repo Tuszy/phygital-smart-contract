@@ -1,4 +1,4 @@
-import { Wallet } from "ethers";
+import { Wallet, solidityPackedKeccak256 } from "ethers";
 import { MerkleTree } from "merkletreejs";
 import { getLSP2JSONURL, keccak256 } from "./util";
 import keyPairs from "./key-pairs";
@@ -31,15 +31,18 @@ export const merkleRoot = merkleTree.getHexRoot();
 
 export const getVerificationDataForPhygital = (
   phygitalIndex: number,
-  phygitalOwnerAddress: string
+  phygitalOwnerAddress: string,
+  nonce: number = 0
 ) => {
-  const hashedPhygitalOwnerAddress = keccak256("address")(phygitalOwnerAddress);
   const phygitalKeyPair = keyPairs[phygitalIndex];
   const phygitalAddress = phygitalKeyPair.publicKey;
   const phygitalId = keccak256("address")(phygitalAddress);
   const phygitalWallet = new Wallet(phygitalKeyPair.privateKey);
   const phygitalSignature = phygitalWallet.signingKey.sign(
-    hashedPhygitalOwnerAddress
+    solidityPackedKeccak256(
+      ["address", "uint256"],
+      [phygitalOwnerAddress, nonce]
+    )
   ).serialized;
   const merkleProof = merkleTree.getProof(phygitalId).map((node) => node.data);
 

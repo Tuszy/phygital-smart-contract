@@ -21,7 +21,7 @@ import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from ".
  * @title Phygital Asset Implementation.
  * A Phygital Asset is comprised of a specified amount of phygitals, whose ids are included in a merkle tree (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist).
  * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the list of available phygitals (merkle tree leaf layer).
- * The public key is called 'phygital address' and the private key is used to sign the owner's address to verify the ownership (e.g. during minting).
+ * The public key is called 'phygital address' and the private key is used to sign the abi.encoded(owner's address, nonce) to verify the ownership (during minting the nonce is equal to 0).
  * The 'phygital id' results from the keccak256 hash of the phygital address.
  * @author Dennis Tuszynski
  * @dev Contract module represents a phygital asset.
@@ -37,6 +37,11 @@ contract PhygitalAsset is LSP8Enumerable {
      * @notice Indicates whether the phygital ownership has been verified
      */
     mapping(bytes32 => bool) public verifiedOwnership;
+
+    /**
+     * @notice Nonce is used to verify the ownership after a transfer. Increased with each transfer.
+     */
+    mapping(bytes32 => uint256) public nonce;
 
     /**
      * @notice Constructs a phygital asset
@@ -164,15 +169,15 @@ contract PhygitalAsset is LSP8Enumerable {
      *
      * @param phygitalOwner The address of the phygital owner
      * @param phygitalId The id of the phygital (keccak256 hashed public key of nfc tag or qr code)
-     * @param phygitalSignature The signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
+     * @param phygitalSignature The signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital and the current nonce)
      */
     function _verifyPhygitalOwnership(
         address phygitalOwner,
         bytes32 phygitalId,
         bytes memory phygitalSignature
-    ) public pure returns (bool) {
+    ) public view returns (bool) {       
         bytes32 hashedPhygitalOwnerAddress = keccak256(
-            abi.encodePacked(phygitalOwner)
+            abi.encodePacked(phygitalOwner, nonce[phygitalId])
         );
         (
             address phygitalAddress,
@@ -261,6 +266,9 @@ contract PhygitalAsset is LSP8Enumerable {
     ) internal override(LSP8IdentifiableDigitalAssetCore) {
         if (phygitalOwner != address(0)) {
             verifiedOwnership[phygitalId] = false;
+            nonce[phygitalId] = nonce[phygitalId] + 1;
+        }else{
+            nonce[phygitalId] = 1;
         }
         super._afterTokenTransfer(
             phygitalOwner,

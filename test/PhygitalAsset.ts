@@ -349,11 +349,18 @@ describe("PhygitalAsset", function () {
         )
       ).not.to.be.reverted;
 
+      const { phygitalSignature: phygitalSignature2 } =
+        getVerificationDataForPhygital(
+          phygitalIndex,
+          phygitalOwner.universalProfileAddress,
+          Number(await phygitalAsset.nonce(phygitalId))
+        );
+
       await expect(
         phygitalOwner.mint(
           phygitalId,
           phygitalIndex,
-          phygitalSignature,
+          phygitalSignature2,
           merkleProof,
           false
         )
@@ -473,9 +480,8 @@ describe("PhygitalAsset", function () {
       });
 
       it("Should pass if the ownership has been verified after a prior transfer", async function () {
-        const { collectionOwner, phygitalOwner } = await loadFixture(
-          deployFixture
-        );
+        const { phygitalAsset, collectionOwner, phygitalOwner } =
+          await loadFixture(deployFixture);
 
         const phygitalIndex = 0;
         const { phygitalId, phygitalSignature, merkleProof } =
@@ -505,7 +511,8 @@ describe("PhygitalAsset", function () {
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
             phygitalIndex,
-            collectionOwner.universalProfileAddress
+            collectionOwner.universalProfileAddress,
+            Number(await phygitalAsset.nonce(phygitalId))
           );
 
         await expect(
@@ -593,7 +600,8 @@ describe("PhygitalAsset", function () {
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
             phygitalIndex,
-            collectionOwner.universalProfileAddress
+            collectionOwner.universalProfileAddress,
+            Number(await phygitalAsset.nonce(phygitalId))
           );
 
         await expect(
@@ -650,7 +658,8 @@ describe("PhygitalAsset", function () {
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
             phygitalIndex,
-            collectionOwner.universalProfileAddress
+            collectionOwner.universalProfileAddress,
+            Number(await phygitalAsset.nonce(phygitalId))
           );
 
         await expect(
@@ -689,7 +698,8 @@ describe("PhygitalAsset", function () {
         const { phygitalSignature: phygitalSignature2 } =
           getVerificationDataForPhygital(
             phygitalIndex,
-            collectionOwner.universalProfileAddress
+            collectionOwner.universalProfileAddress,
+            Number(await phygitalAsset.nonce(phygitalId))
           );
 
         await expect(

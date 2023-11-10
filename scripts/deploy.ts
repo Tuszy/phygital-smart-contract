@@ -7,7 +7,7 @@ import {
 
 // added manually
 const deployedAddresses: Record<string, string | null> = {
-  LuksoTestnet: "0x3e0c0A775052d205bC7189BE61b0Aa8DEeC254e7",
+  LuksoTestnet: "0xc60E674211BDE37f47Ff1AB6a6b536d9E322fC1F",
   LuksoMainnet: null,
 };
 
