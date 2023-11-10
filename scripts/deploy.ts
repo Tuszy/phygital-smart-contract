@@ -7,7 +7,7 @@ import {
 
 // added manually
 const deployedAddresses: Record<string, string | null> = {
-  LuksoTestnet: "0xfBd8FBBf9DF2d6d4f0a4c9fd2D739dC418731821",
+  LuksoTestnet: "0x3e0c0A775052d205bC7189BE61b0Aa8DEeC254e7",
   LuksoMainnet: null,
 };
 
@@ -24,7 +24,7 @@ async function main() {
         "Sneaker",
         "SNKR",
         phygitalAssetLSP4MetadataJSONURL,
-        collectionOwner.address,
+        process.env.COLLECTION_OWNER || collectionOwner.address,
       ]);
 
       await phygitalAsset.waitForDeployment();
