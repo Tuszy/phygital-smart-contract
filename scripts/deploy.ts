@@ -8,18 +8,21 @@ import {
 async function main() {
   const [collectionOwner] = await ethers.getSigners();
 
-  const phygitalAsset = await ethers.deployContract("PhygitalAsset", [
-    merkleRoot,
-    phygitalCollectionJSONURL,
-    "Sneaker",
-    "SNKR",
-    phygitalAssetLSP4MetadataJSONURL,
-    collectionOwner.address,
-  ]);
+  try {
+    const phygitalAsset = await ethers.deployContract("PhygitalAsset", [
+      merkleRoot,
+      phygitalCollectionJSONURL,
+      "Sneaker",
+      "SNKR",
+      phygitalAssetLSP4MetadataJSONURL,
+      collectionOwner.address,
+    ]);
 
-  await phygitalAsset.waitForDeployment();
-
-  console.log(`Phygital asset deployed to ${phygitalAsset.target}`);
+    await phygitalAsset.waitForDeployment();
+    console.log(`Phygital asset deployed to ${phygitalAsset.target}`);
+  } catch (e) {
+    console.log("Failed to deploy phygital asset", e);
+  }
 }
 
 main().catch((error) => {
