@@ -10,15 +10,15 @@ import {
   phygitalCollectionJSONURL,
   merkleRoot,
   phygitalAssetLSP4MetadataJSONURL,
-} from "../test-data/phygital-collection";
+} from "../test-util/phygital-collection";
 
 // Universal Profile
-import { getUniversalProfiles } from "../test-data/universal-profile";
+import { getUniversalProfiles } from "../test-util/universal-profile";
 import {
   throwIfAddressIsNotAERC725Account,
   throwIfAddressIsNotALSP6KeyManager,
   throwIfAddressIsNotAPhygitalAsset,
-} from "../test-data/validation";
+} from "../test-util/validation";
 
 describe("Validation", function () {
   async function deployFixture() {

@@ -3,7 +3,7 @@ import { ethers, lspFactory } from "hardhat";
 
 // Types
 import type { AddressLike, BytesLike, BigNumberish, Interface } from "ethers";
-import type { HardhatEthersSigner } from "../node_modules/@nomicfoundation/hardhat-ethers/signers";
+import type { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { PhygitalAsset } from "../typechain-types";
 
 // Constants

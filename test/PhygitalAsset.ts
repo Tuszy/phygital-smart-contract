@@ -11,11 +11,11 @@ import {
   getVerificationDataForPhygital,
   phygitalCollectionJSONURL,
   phygitalAssetLSP4MetadataJSONURL,
-} from "../test-data/phygital-collection";
-import { merkleRoot } from "../test-data/phygital-collection";
+} from "../test-util/phygital-collection";
+import { merkleRoot } from "../test-util/phygital-collection";
 
 // Universal Profile
-import { getUniversalProfiles } from "../test-data/universal-profile";
+import { getUniversalProfiles } from "../test-util/universal-profile";
 
 // Constants
 import {
