@@ -32,7 +32,7 @@ extendEnvironment(async (hre) => {
   hre.LSPFactory = LSPFactory;
   hre.lspFactory = new LSPFactory(
     hre.Web3Provider as EthersExternalProvider,
-    LSP_FACTORY_PRIVATE_KEY ?? hre.network.config.accounts[0]
+    LSP_FACTORY_PRIVATE_KEY
   );
 });
 
