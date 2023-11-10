@@ -91,6 +91,8 @@ contract PhygitalAsset is LSP8Enumerable {
     ) public {
         address phygitalOwner = msg.sender;
 
+        if(nonce[phygitalId] > 0) revert LSP8TokenIdAlreadyMinted(phygitalId);
+
         if (
             !_verifyPhygitalOwnership(
                 phygitalOwner,
@@ -170,7 +172,7 @@ contract PhygitalAsset is LSP8Enumerable {
      * @param phygitalOwner The address of the phygital owner
      * @param phygitalId The id of the phygital (keccak256 hashed public key of nfc tag or qr code)
      * @param phygitalSignature The signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital and the current nonce)
-     */
+          */
     function _verifyPhygitalOwnership(
         address phygitalOwner,
         bytes32 phygitalId,
