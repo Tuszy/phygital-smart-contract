@@ -15,12 +15,16 @@ export const phygitalCollectionJSONURL = getLSP2JSONURL(
   phygitalCollectionIpfsURL
 );
 
+console.log("PHYGITAL COLLECTION", phygitalCollectionJSONURL);
+
 export const phygitalAssetLSP4MetadataIpfsURL =
-  "ipfs://QmXnVhSYvUsVTQ8TrRaX9ABmDC5W8HyTxKCcjAFySixKUF";
+  "ipfs://QmZW48MKKZviFdxsN3dZC4mzzCc79ynAHbHhnebwziRbjS";
 export const phygitalAssetLSP4MetadataJSONURL = getLSP2JSONURL(
   phygitalAssetLSP4Metadata,
   phygitalAssetLSP4MetadataIpfsURL
 );
+
+console.log("LSP4 METADATA", phygitalAssetLSP4MetadataJSONURL);
 
 export const createMerkleTree = (phygitalCollection: string[]) =>
   new MerkleTree(phygitalCollection, keccak256("bytes"));

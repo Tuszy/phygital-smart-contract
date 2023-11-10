@@ -10,8 +10,10 @@
       {
         "width": 400,
         "height": 400,
-        "verificationFunction": "keccak256(bytes)",
-        "verificationData": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb",
+        "verification": {
+          "method": "keccak256(bytes)",
+          "data": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb"
+        },
         "url": "ifps://QmTCqXeST1vFBjUW15f9zXJMJKSz9JcG5gi7wajxs8MGwK"
       }
     ],
@@ -20,35 +22,22 @@
         {
           "width": 400,
           "height": 400,
-          "verificationFunction": "keccak256(bytes)",
-          "verificationData": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb",
+          "verification": {
+            "method": "keccak256(bytes)",
+            "data": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb"
+          },
           "url": "ifps://QmTCqXeST1vFBjUW15f9zXJMJKSz9JcG5gi7wajxs8MGwK"
         }
       ]
     ],
     "assets": [
       {
-        "verificationFunction": "keccak256(bytes)",
-        "verificationData": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb",
+        "verification": {
+          "method": "keccak256(bytes)",
+          "data": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb"
+        },
         "url": "ifps://QmTCqXeST1vFBjUW15f9zXJMJKSz9JcG5gi7wajxs8MGwK",
         "fileType": "jpeg"
-      }
-    ],
-    "attributes": [
-      {
-        "key": "Standard type",
-        "value": "LSP",
-        "type": "string"
-      },
-      {
-        "key": "Standard number",
-        "value": 4,
-        "type": "number"
-      },
-      {
-        "key": "🆙",
-        "value": true,
-        "type": "boolean"
       }
     ]
   }
