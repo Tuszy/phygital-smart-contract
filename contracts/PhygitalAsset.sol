@@ -58,13 +58,14 @@ contract PhygitalAsset is LSP8Enumerable {
         LSP8IdentifiableDigitalAsset(
             name_,
             symbol_,
-            collectionOwner_,
+            msg.sender,
             _LSP8_TOKENID_TYPE_HASH
         )
     {
         merkleRootOfCollection = merkleRootOfCollection_;
         _setData(_PHYGITAL_ASSET_COLLECTION_URI_KEY, collectionJSONURL_);
         setData(_LSP4_METADATA_KEY, metadataJSONURL_);
+        _setOwner(collectionOwner_);
     }
 
     /**

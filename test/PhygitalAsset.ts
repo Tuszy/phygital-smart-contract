@@ -51,6 +51,7 @@ describe("PhygitalAsset", function () {
     );
 
     return {
+      PhygitalAsset,
       phygitalAsset,
       phygitalAssetName,
       phygitalAssetSymbol,
@@ -131,6 +132,30 @@ describe("PhygitalAsset", function () {
 
       expect(await phygitalAsset.owner()).to.equal(
         collectionOwner.universalProfileOwner.address
+      );
+    });
+
+    it("Should allow assigning a universal profile address as the owner", async function () {
+      const {
+        PhygitalAsset,
+        merkleRootOfCollection,
+        phygitalAssetName,
+        phygitalAssetSymbol,
+        collectionOwner,
+      } = await loadFixture(deployFixture);
+
+      let phygitalAssetPromise = PhygitalAsset.deploy(
+        merkleRootOfCollection,
+        phygitalCollectionJSONURL,
+        phygitalAssetName,
+        phygitalAssetSymbol,
+        phygitalAssetLSP4MetadataJSONURL,
+        collectionOwner.universalProfileAddress
+      );
+      await expect(phygitalAssetPromise).not.to.be.reverted;
+      const phygitalAsset = await phygitalAssetPromise;
+      expect(await phygitalAsset.owner()).to.equal(
+        collectionOwner.universalProfileAddress
       );
     });
   });
