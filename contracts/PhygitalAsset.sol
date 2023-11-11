@@ -18,8 +18,6 @@ import {_LSP4_METADATA_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP4Digit
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from "./PhygitalAssetConstants.sol";
 
-import "hardhat/console.sol";
-
 /**
  * @title Phygital Asset Implementation.
  * A Phygital Asset is comprised of a specified amount of phygitals, whose addresses are forming the merkle tree to verify their validity/existence during minting (similar to a whitelist).
