@@ -36,7 +36,7 @@ console.log("LSP4 METADATA", phygitalAssetLSP4MetadataJSONURL);
 
 export const phygitalAssetLSP8BaseURI = concat([
   KECCAK_256_HASH_FUNCTION,
-  toUtf8Bytes("ipfs://QmZ4UG9VwASoNnxeczbtiAGeLFWVTokNSdtJmEN1dTR2EN/"),
+  toUtf8Bytes("ipfs://QmckwP25vF9Nijn6qUYt7t6Z9tj79QVXj8GXFH5TWiMJ72/"),
 ]);
 
 export const createMerkleTree = (phygitalCollection: string[]) =>
