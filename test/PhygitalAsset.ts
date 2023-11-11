@@ -1,3 +1,4 @@
+import { concat, toUtf8Bytes } from "ethers";
 // Crypto
 import { ethers } from "hardhat";
 
@@ -11,6 +12,7 @@ import {
   getVerificationDataForPhygital,
   phygitalCollectionJSONURL,
   phygitalAssetLSP4MetadataJSONURL,
+  phygitalAssetLSP8BaseURI,
   merkleTree,
   phygitalCollection,
 } from "../test-util/phygital-collection";
@@ -27,6 +29,9 @@ import {
 // see schemas/PhygitalAsset.json
 const PhygitalAssetCollectionURI =
   "0x4eff76d745d12fd5e5f7b38e8f396dd0d099124739e69a289ca1faa7ebc53768";
+const LSP4TokenType =
+  "0xe0261fa95db2eb3b5439bd033cda66d56b96f92f243a8228fd87550ed7bdfdb3";
+const LSP4TokenTypeCollection = 2;
 
 describe("PhygitalAsset", function () {
   async function deployFixture() {
@@ -44,6 +49,7 @@ describe("PhygitalAsset", function () {
       phygitalAssetName,
       phygitalAssetSymbol,
       phygitalAssetLSP4MetadataJSONURL,
+      phygitalAssetLSP8BaseURI,
       owner.address
     );
 
@@ -123,7 +129,25 @@ describe("PhygitalAsset", function () {
 
       expect(
         await phygitalAsset.getData(ERC725YDataKeys.LSP8.LSP8TokenIdType)
-      ).to.equal(BigInt(LSP8_TOKEN_ID_TYPES.HASH));
+      ).to.equal(BigInt(LSP8_TOKEN_ID_TYPES.UNIQUE_ID));
+    });
+
+    it("Should set the right metadata base uri", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(
+        await phygitalAsset.getData(
+          ERC725YDataKeys.LSP8.LSP8TokenMetadataBaseURI
+        )
+      ).to.equal(phygitalAssetLSP8BaseURI);
+    });
+
+    it("Should set the right token type", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(await phygitalAsset.getData(LSP4TokenType)).to.equal(
+        BigInt(LSP4TokenTypeCollection)
+      );
     });
 
     it("Should set the right owner", async function () {
@@ -151,6 +175,7 @@ describe("PhygitalAsset", function () {
         phygitalAssetName,
         phygitalAssetSymbol,
         phygitalAssetLSP4MetadataJSONURL,
+        phygitalAssetLSP8BaseURI,
         collectionOwner.universalProfileAddress
       );
       await expect(phygitalAssetPromise).not.to.be.reverted;

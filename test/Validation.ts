@@ -1,3 +1,4 @@
+import { phygitalAssetLSP8BaseURI } from "./../test-util/phygital-collection";
 //Crypto
 import { ethers } from "hardhat";
 
@@ -36,6 +37,7 @@ describe("Validation", function () {
       phygitalAssetName,
       phygitalAssetSymbol,
       phygitalAssetLSP4MetadataJSONURL,
+      phygitalAssetLSP8BaseURI,
       owner.address
     );
 

@@ -3,6 +3,7 @@ import {
   phygitalCollectionJSONURL,
   merkleTree,
   phygitalAssetLSP4MetadataJSONURL,
+  phygitalAssetLSP8BaseURI,
 } from "../test-util/phygital-collection";
 
 // added manually
@@ -24,6 +25,7 @@ async function main() {
         "Sneaker",
         "SNKR",
         phygitalAssetLSP4MetadataJSONURL,
+        phygitalAssetLSP8BaseURI,
         process.env.COLLECTION_OWNER || collectionOwner.address,
       ]);
 

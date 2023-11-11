@@ -3,12 +3,16 @@ import {
   solidityPackedKeccak256,
   getBytes,
   AbiCoder,
+  concat,
   keccak256,
+  toUtf8Bytes,
 } from "ethers";
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import { getLSP2JSONURL } from "./util";
 import keyPairs from "./key-pairs";
 import phygitalAssetLSP4Metadata from "./phygital-asset-lsp4-metadata.json";
+
+export const KECCAK_256_HASH_FUNCTION = "0x6f357c6a";
 
 export const phygitalCollection = keyPairs.map((keyPair) => keyPair.publicKey);
 
@@ -29,6 +33,11 @@ export const phygitalAssetLSP4MetadataJSONURL = getLSP2JSONURL(
 );
 
 console.log("LSP4 METADATA", phygitalAssetLSP4MetadataJSONURL);
+
+export const phygitalAssetLSP8BaseURI = concat([
+  KECCAK_256_HASH_FUNCTION,
+  toUtf8Bytes("ipfs://QmZ4UG9VwASoNnxeczbtiAGeLFWVTokNSdtJmEN1dTR2EN/"),
+]);
 
 export const createMerkleTree = (phygitalCollection: string[]) =>
   StandardMerkleTree.of(
