@@ -53,7 +53,7 @@ export const createUniversalProfile = async (
   };
 
   const mint = async (
-    phygitalId: BytesLike,
+    phygitalAddress: AddressLike,
     phygitalSignature: BytesLike,
     merkleProofOfCollection: BytesLike[],
     force: boolean
@@ -62,21 +62,21 @@ export const createUniversalProfile = async (
       PhygitalAssetInterface,
       phygitalAssetContractAddress,
       "mint",
-      phygitalId,
+      phygitalAddress,
       phygitalSignature,
       merkleProofOfCollection,
       force
     );
 
   const verifyOwnershipAfterTransfer = async (
-    phygitalId: BytesLike,
+    phygitalAddress: AddressLike,
     phygitalSignature: BytesLike
   ) =>
     await executeCallThroughKeyManager(
       PhygitalAssetInterface,
       phygitalAssetContractAddress,
       "verifyOwnershipAfterTransfer",
-      phygitalId,
+      phygitalAddress,
       phygitalSignature
     );
 

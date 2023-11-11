@@ -78,18 +78,19 @@ contract PhygitalAsset is LSP8Enumerable {
     /**
      * @notice Mints a phygital from the collection.
      *
-     * @param phygitalId The id of the phygital to mint. (keccak256 hashed public key of nfc tag or qr code)
+     * @param phygitalAddress The address of the phygital to mint. (public key of nfc tag or qr code)
      * @param phygitalSignature The signature to prove the ownership of the phygital. (= signed owner address)
      * @param merkleProofOfCollection The merkle proof to check whether the phygital is part of the given collection.
      * @param force Set to `false` to ensure minting for a recipient that implements LSP1, `false` otherwise for forcing the minting.
      */
     function mint(
-        bytes32 phygitalId,
+        address phygitalAddress,
         bytes memory phygitalSignature,
         bytes32[] memory merkleProofOfCollection,
         bool force
     ) public {
         address phygitalOwner = msg.sender;
+        bytes32 phygitalId = keccak256(abi.encode(phygitalAddress));
 
         if(nonce[phygitalId] > 0) revert LSP8TokenIdAlreadyMinted(phygitalId);
 
@@ -124,13 +125,15 @@ contract PhygitalAsset is LSP8Enumerable {
     /**
      * @notice Tries to verify the ownership of the phygital after a transfer - on success updates the verifiedOwnership field with true.
      *
-     * @param phygitalId The id of the phygital
+     * @param phygitalAddress The address of the phygital (public key of nfc tag or qr code)
      * @param phygitalSignature The signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
      */
     function verifyOwnershipAfterTransfer(
-        bytes32 phygitalId,
+        address phygitalAddress,
         bytes memory phygitalSignature
     ) public {
+        bytes32 phygitalId = keccak256(abi.encode(phygitalAddress));
+        
         if (msg.sender != tokenOwnerOf(phygitalId)) {
             revert LSP8NotTokenOwner(
                 tokenOwnerOf(phygitalId),

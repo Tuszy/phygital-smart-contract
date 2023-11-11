@@ -161,7 +161,7 @@ describe("PhygitalAsset", function () {
     });
   });
 
-  describe("function mint(address phygitalOwner, bytes32 phygitalId, bytes memory phygitalSignature, bytes32[] memory merkleProofOfCollection, bool force) public", function () {
+  describe("function mint(address phygitalOwner, address phygitalAddress, bytes memory phygitalSignature, bytes32[] memory merkleProofOfCollection, bool force) public", function () {
     describe("Validations", function () {
       it("Should revert with the the custom error PhygitalAssetOwnershipVerificationFailed if the phygital signature is wrong - consequence: msg.sender (EOA) is not the phygital owner", async function () {
         const { phygitalAsset, phygitalOwner } = await loadFixture(
@@ -169,7 +169,7 @@ describe("PhygitalAsset", function () {
         );
 
         const phygitalAddress = phygitalCollection[0];
-        const { phygitalId, phygitalSignature, merkleProof } =
+        const { phygitalSignature, merkleProof } =
           getVerificationDataForPhygital(
             phygitalAddress,
             phygitalOwner.universalProfileAddress
@@ -178,7 +178,7 @@ describe("PhygitalAsset", function () {
         await expect(
           phygitalAsset
             .connect(phygitalOwner.universalProfileOwner)
-            .mint(phygitalId, phygitalSignature, merkleProof, false)
+            .mint(phygitalAddress, phygitalSignature, merkleProof, false)
         ).to.be.revertedWithCustomError(
           phygitalAsset,
           "PhygitalAssetOwnershipVerificationFailed"
@@ -190,7 +190,7 @@ describe("PhygitalAsset", function () {
           await loadFixture(deployFixture);
 
         const phygitalAddress = phygitalCollection[0];
-        const { phygitalId, phygitalSignature, merkleProof } =
+        const { phygitalSignature, merkleProof } =
           getVerificationDataForPhygital(
             phygitalAddress,
             phygitalOwner.universalProfileAddress
@@ -198,7 +198,7 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.mint(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature,
             merkleProof,
             false
@@ -215,7 +215,7 @@ describe("PhygitalAsset", function () {
         );
 
         const phygitalAddress = phygitalCollection[0];
-        const { phygitalId, phygitalSignature, merkleProof } =
+        const { phygitalSignature, merkleProof } =
           getVerificationDataForPhygital(
             phygitalAddress,
             phygitalOwner.universalProfileAddress
@@ -223,7 +223,7 @@ describe("PhygitalAsset", function () {
 
         await expect(
           phygitalOwner.mint(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature,
             merkleProof.slice(1),
             false
@@ -240,7 +240,7 @@ describe("PhygitalAsset", function () {
         );
 
         const phygitalAddress = phygitalCollection[0];
-        const { phygitalId, phygitalSignature, merkleProof } =
+        const { phygitalSignature, merkleProof } =
           getVerificationDataForPhygital(
             phygitalAddress,
             phygitalOwner.universalProfileOwner.address
@@ -249,7 +249,7 @@ describe("PhygitalAsset", function () {
         await expect(
           phygitalAsset
             .connect(phygitalOwner.universalProfileOwner)
-            .mint(phygitalId, phygitalSignature, merkleProof, false)
+            .mint(phygitalAddress, phygitalSignature, merkleProof, false)
         ).to.be.revertedWithCustomError(
           phygitalAsset,
           "LSP8NotifyTokenReceiverIsEOA"
@@ -261,16 +261,15 @@ describe("PhygitalAsset", function () {
       const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
 
       const phygitalAddress = phygitalCollection[0];
-      const { phygitalId, phygitalSignature, merkleProof } =
-        getVerificationDataForPhygital(
-          phygitalAddress,
-          phygitalOwner.universalProfileOwner.address
-        );
+      const { phygitalSignature, merkleProof } = getVerificationDataForPhygital(
+        phygitalAddress,
+        phygitalOwner.universalProfileOwner.address
+      );
 
       await expect(
         phygitalAsset
           .connect(phygitalOwner.universalProfileOwner)
-          .mint(phygitalId, phygitalSignature, merkleProof, true)
+          .mint(phygitalAddress, phygitalSignature, merkleProof, true)
       ).not.to.be.reverted;
     });
 
@@ -278,14 +277,18 @@ describe("PhygitalAsset", function () {
       const { phygitalOwner } = await loadFixture(deployFixture);
 
       const phygitalAddress = phygitalCollection[0];
-      const { phygitalId, phygitalSignature, merkleProof } =
-        getVerificationDataForPhygital(
-          phygitalAddress,
-          phygitalOwner.universalProfileAddress
-        );
+      const { phygitalSignature, merkleProof } = getVerificationDataForPhygital(
+        phygitalAddress,
+        phygitalOwner.universalProfileAddress
+      );
 
       await expect(
-        phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, true)
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalSignature,
+          merkleProof,
+          true
+        )
       ).not.to.be.reverted;
     });
 
@@ -293,14 +296,18 @@ describe("PhygitalAsset", function () {
       const { phygitalOwner } = await loadFixture(deployFixture);
 
       const phygitalAddress = phygitalCollection[0];
-      const { phygitalId, phygitalSignature, merkleProof } =
-        getVerificationDataForPhygital(
-          phygitalAddress,
-          phygitalOwner.universalProfileAddress
-        );
+      const { phygitalSignature, merkleProof } = getVerificationDataForPhygital(
+        phygitalAddress,
+        phygitalOwner.universalProfileAddress
+      );
 
       await expect(
-        phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalSignature,
+          merkleProof,
+          false
+        )
       ).not.to.be.reverted;
     });
 
@@ -315,7 +322,12 @@ describe("PhygitalAsset", function () {
         );
 
       await expect(
-        phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalSignature,
+          merkleProof,
+          false
+        )
       ).not.to.be.reverted;
 
       const { phygitalSignature: phygitalSignature2 } =
@@ -326,7 +338,12 @@ describe("PhygitalAsset", function () {
         );
 
       await expect(
-        phygitalOwner.mint(phygitalId, phygitalSignature2, merkleProof, false)
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalSignature2,
+          merkleProof,
+          false
+        )
       ).to.be.revertedWithCustomError(
         phygitalAsset,
         "LSP8TokenIdAlreadyMinted"
@@ -340,14 +357,19 @@ describe("PhygitalAsset", function () {
         );
 
         const phygitalAddress = phygitalCollection[0];
-        const { phygitalId, phygitalSignature, merkleProof } =
+        const { phygitalSignature, merkleProof } =
           getVerificationDataForPhygital(
             phygitalAddress,
             phygitalOwner.universalProfileAddress
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         )
           .to.emit(phygitalAsset, "Transfer")
           .withArgs(
@@ -377,7 +399,12 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         await expect(
@@ -401,7 +428,12 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         await expect(
@@ -436,7 +468,12 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         await expect(
@@ -456,7 +493,7 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature2
           )
         ).not.to.be.reverted;
@@ -472,7 +509,7 @@ describe("PhygitalAsset", function () {
     });
   });
 
-  describe("function verifyOwnershipAfterTransfer(bytes32 phygitalId, bytes memory phygitalSignature) public", function () {
+  describe("function verifyOwnershipAfterTransfer(address phygitalAddress, bytes memory phygitalSignature) public", function () {
     describe("Validations", function () {
       it("Should revert with the the custom error PhygitalAssetHasAlreadyAVerifiedOwnership if the phygital ownership is already verified (after mint)", async function () {
         const { phygitalAsset, phygitalOwner } = await loadFixture(
@@ -480,19 +517,24 @@ describe("PhygitalAsset", function () {
         );
 
         const phygitalAddress = phygitalCollection[0];
-        const { phygitalId, phygitalSignature, merkleProof } =
+        const { phygitalSignature, merkleProof } =
           getVerificationDataForPhygital(
             phygitalAddress,
             phygitalOwner.universalProfileAddress
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         await expect(
           phygitalOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature
           )
         ).to.be.revertedWithCustomError(
@@ -513,7 +555,12 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         await expect(
@@ -533,14 +580,14 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature2
           )
         ).not.to.be.reverted;
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature2
           )
         ).to.be.revertedWithCustomError(
@@ -561,7 +608,12 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         await expect(
@@ -585,7 +637,7 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature2
           )
         ).not.to.be.reverted;
@@ -607,7 +659,12 @@ describe("PhygitalAsset", function () {
           );
 
         await expect(
-          phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
         ).not.to.be.reverted;
 
         const { phygitalSignature: phygitalSignature2 } =
@@ -619,7 +676,7 @@ describe("PhygitalAsset", function () {
 
         await expect(
           collectionOwner.verifyOwnershipAfterTransfer(
-            phygitalId,
+            phygitalAddress,
             phygitalSignature2
           )
         ).to.be.revertedWithCustomError(phygitalAsset, "LSP8NotTokenOwner");
@@ -638,7 +695,12 @@ describe("PhygitalAsset", function () {
         );
 
       await expect(
-        phygitalOwner.mint(phygitalId, phygitalSignature, merkleProof, false)
+        phygitalOwner.mint(
+          phygitalAddress,
+          phygitalSignature,
+          merkleProof,
+          false
+        )
       ).not.to.be.reverted;
 
       await expect(
@@ -651,7 +713,7 @@ describe("PhygitalAsset", function () {
 
       await expect(
         collectionOwner.verifyOwnershipAfterTransfer(
-          phygitalId,
+          phygitalAddress,
           phygitalSignature // wrong signature
         )
       ).to.be.revertedWithCustomError(
