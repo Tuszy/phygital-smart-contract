@@ -22,7 +22,7 @@ import "hardhat/console.sol";
 
 /**
  * @title Phygital Asset Implementation.
- * A Phygital Asset is comprised of a specified amount of phygitals, whose ids are included in a merkle tree (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist).
+ * A Phygital Asset is comprised of a specified amount of phygitals, whose addresses are forming the merkle tree to verify their validity/existence during minting (similar to a whitelist).
  * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code).
  * The public key is called 'phygital address' and the private key is used to sign the abi.encoded(owner's address, nonce) to verify the ownership (during minting the nonce is equal to 0).
  * The 'phygital id' results from the keccak256 hash of the phygital address.

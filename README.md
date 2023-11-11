@@ -4,7 +4,7 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
 
 ## Overview
 
-- A Phygital Asset (= extended LSP8 contract) is comprised of a specified amount of phygitals (= LSP8 tokens), whose ids are included in a [merkle tree](https://github.com/OpenZeppelin/merkle-tree) (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist)
+- A Phygital Asset (= extended LSP8 contract) is comprised of a specified amount of phygitals (= LSP8 tokens), whose addresses are forming the [merkle tree](https://github.com/OpenZeppelin/merkle-tree) to verify their validity/existence during minting (similar to a whitelist)
 - A Phygital (= LSP8 token) is represented by an asymmetric key-pair (e.g. stored in a NFC tag or QR code)
   - The *public key* is called **Phygital address**
   - The *private key* is used to sign the **Phygital Owner** (= owner's universal profile address) concatenated with a **Nonce** to verify the ownership, e.g. during minting and after transfers
@@ -14,18 +14,18 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
 ## Manual
 ### Steps to create **PhygitalAsset**
    1. Upload LSP4 metadata to IPFS and create LSP2 JSONURL
-   2. Compile list of phygital ids (= phygital collection)
+   2. Compile list of phygital addresses (= phygital collection)
    3. Upload the collection to IPFS and create a LSP2 JSONURL
    4. Calculate the merkle root for the collection
    5. Deploy PhygitalAsset contract instance with the prepared data
 
 ### Steps to mint **PhygitalAsset**
-   1. Retrieve phygital id (e.g. from NFC tag or QR code)
+   1. Retrieve phygital address (e.g. from NFC tag or QR code)
    2. Sign your universal profile address concatenated with 0 (initial phygital nonce) with the private key of the phygital
    3. Determine merkle proof from the collection merkle tree
    4. Mint PhygitalAsset token with the prepared data
 
 ### Steps to verify ownership of **PhygitalAsset** after transfer
-   1. Retrieve phygital id (e.g. from NFC tag or QR code)
+   1. Retrieve phygital address (e.g. from NFC tag or QR code) and hash it to get the phygital id
    2. Sign your universal profile address concatenated with the current phygital nonce with the private key of the phygital
    3. Verify PhygitalAsset token ownership with the prepared data

@@ -13,7 +13,7 @@ import phygitalAssetLSP4Metadata from "./phygital-asset-lsp4-metadata.json";
 export const phygitalCollection = keyPairs.map((keyPair) => keyPair.publicKey);
 
 export const phygitalCollectionIpfsURL =
-  "ipfs://QmUyM9XyXVFEpF38Kj6omo98F5ZTfFYvnKhgtf6exWfSnC";
+  "ipfs://QmXGywSvgx6SJkvR5CqHjTenFUzmm1gh4ASwWDSyQyFNdZ";
 export const phygitalCollectionJSONURL = getLSP2JSONURL(
   phygitalCollection,
   phygitalCollectionIpfsURL
