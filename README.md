@@ -4,7 +4,7 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
 
 ## Overview
 
-- A Phygital Asset (= extended LSP8 contract) is comprised of a specified amount of phygitals (= LSP8 tokens), whose ids are included in a merkle tree (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist)
+- A Phygital Asset (= extended LSP8 contract) is comprised of a specified amount of phygitals (= LSP8 tokens), whose ids are included in a [merkle tree](https://github.com/OpenZeppelin/merkle-tree) (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist)
 - A Phygital (= LSP8 token) is represented by an asymmetric key-pair (e.g. stored in a NFC tag or QR code) and an index that is equal to the position in the collection
   - The *public key* is called **Phygital address**
   - The *private key* is used to sign the **Phygital Owner** (= owner's universal profile address) concatenated with a **Nonce** to verify the ownership, e.g. during minting and after transfers

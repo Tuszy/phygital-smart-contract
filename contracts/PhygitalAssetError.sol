@@ -10,10 +10,9 @@ error PhygitalAssetOwnershipVerificationFailed(
 );
 
 /**
- * @dev Reverts when trying to mint a phygital that is not part of the collection (0x2e72eca5)
+ * @dev Reverts when trying to mint a phygital that is not part of the collection (0x461e0d36)
  */
 error PhygitalAssetIsNotPartOfCollection(
-    uint phygitalIndex,
     bytes32 phygitalId
 );
 

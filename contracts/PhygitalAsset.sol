@@ -4,6 +4,7 @@ pragma solidity ^0.8.20;
 // OpenZeppelin
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 // Lukso
 import {LSP8Enumerable} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Enumerable.sol";
@@ -17,10 +18,12 @@ import {_LSP4_METADATA_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP4Digit
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from "./PhygitalAssetConstants.sol";
 
+import "hardhat/console.sol";
+
 /**
  * @title Phygital Asset Implementation.
  * A Phygital Asset is comprised of a specified amount of phygitals, whose ids are included in a merkle tree (calculated from the collection = list of phygital ids) to verify their validity/existence during minting (similar to a whitelist).
- * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code) and an index which is equal to the position in the list of available phygitals (merkle tree leaf layer).
+ * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code).
  * The public key is called 'phygital address' and the private key is used to sign the abi.encoded(owner's address, nonce) to verify the ownership (during minting the nonce is equal to 0).
  * The 'phygital id' results from the keccak256 hash of the phygital address.
  * @author Dennis Tuszynski
@@ -28,6 +31,7 @@ import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET} from ".
  */
 contract PhygitalAsset is LSP8Enumerable {
     using ECDSA for bytes32;
+    using MerkleProof for bytes32[];
     /**
      * @notice The root of the merkle tree created from the collection
      */
@@ -77,14 +81,12 @@ contract PhygitalAsset is LSP8Enumerable {
      * @notice Mints a phygital from the collection.
      *
      * @param phygitalId The id of the phygital to mint. (keccak256 hashed public key of nfc tag or qr code)
-     * @param phygitalIndex The index of the phygital to mint.
      * @param phygitalSignature The signature to prove the ownership of the phygital. (= signed owner address)
      * @param merkleProofOfCollection The merkle proof to check whether the phygital is part of the given collection.
      * @param force Set to `false` to ensure minting for a recipient that implements LSP1, `false` otherwise for forcing the minting.
      */
     function mint(
         bytes32 phygitalId,
-        uint phygitalIndex,
         bytes memory phygitalSignature,
         bytes32[] memory merkleProofOfCollection,
         bool force
@@ -108,12 +110,10 @@ contract PhygitalAsset is LSP8Enumerable {
         if (
             !_isPhygitalPartOfCollection(
                 merkleProofOfCollection,
-                phygitalId,
-                phygitalIndex
+                phygitalId
             )
         ) {
             revert PhygitalAssetIsNotPartOfCollection(
-                phygitalIndex,
                 phygitalId
             );
         }
@@ -191,7 +191,8 @@ contract PhygitalAsset is LSP8Enumerable {
                 phygitalOwner,
                 phygitalId
             );
-        return keccak256(abi.encodePacked(phygitalAddress)) == phygitalId;
+
+        return keccak256(abi.encode(phygitalAddress)) == phygitalId;
     }
 
     /**
@@ -199,28 +200,12 @@ contract PhygitalAsset is LSP8Enumerable {
      *
      * @param merkleProofOfCollection The merkle proof for the phygital in the merkle tree
      * @param phygitalId The id of the phygital (keccak256 hashed public key of nfc tag or qr code)
-     * @param phygitalIndex The index of the phygital id in the collection
      */
     function _isPhygitalPartOfCollection(
         bytes32[] memory merkleProofOfCollection,
-        bytes32 phygitalId,
-        uint phygitalIndex
+        bytes32 phygitalId
     ) public view returns (bool) {
-        bytes32 hash = phygitalId;
-
-        for (uint i = 0; i < merkleProofOfCollection.length; i++) {
-            bytes32 proofElement = merkleProofOfCollection[i];
-
-            if (phygitalIndex % 2 == 0) {
-                hash = keccak256(abi.encodePacked(hash, proofElement));
-            } else {
-                hash = keccak256(abi.encodePacked(proofElement, hash));
-            }
-
-            phygitalIndex = phygitalIndex / 2;
-        }
-
-        return hash == merkleRootOfCollection;
+        return merkleProofOfCollection.verify(merkleRootOfCollection, keccak256(bytes.concat(phygitalId)));
     }
 
     /**

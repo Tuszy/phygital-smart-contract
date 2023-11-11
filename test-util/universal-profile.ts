@@ -54,7 +54,6 @@ export const createUniversalProfile = async (
 
   const mint = async (
     phygitalId: BytesLike,
-    phygitalIndex: BigNumberish,
     phygitalSignature: BytesLike,
     merkleProofOfCollection: BytesLike[],
     force: boolean
@@ -64,7 +63,6 @@ export const createUniversalProfile = async (
       phygitalAssetContractAddress,
       "mint",
       phygitalId,
-      phygitalIndex,
       phygitalSignature,
       merkleProofOfCollection,
       force

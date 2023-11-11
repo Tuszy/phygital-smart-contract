@@ -1,13 +1,13 @@
 import { ethers } from "hardhat";
 import {
   phygitalCollectionJSONURL,
-  merkleRoot,
+  merkleTree,
   phygitalAssetLSP4MetadataJSONURL,
 } from "../test-util/phygital-collection";
 
 // added manually
 const deployedAddresses: Record<string, string | null> = {
-  LuksoTestnet: "0xf66ee509115caBEa889F01182887FDd6b89DC73D",
+  LuksoTestnet: "0xd635e46f6eFD8e1eb80a55E9433c6AE2F6e8a7Ce",
   LuksoMainnet: null,
 };
 
@@ -19,7 +19,7 @@ async function main() {
   if (!deployedAddress) {
     try {
       const phygitalAsset = await ethers.deployContract("PhygitalAsset", [
-        merkleRoot,
+        merkleTree.root,
         phygitalCollectionJSONURL,
         "Sneaker",
         "SNKR",

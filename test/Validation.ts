@@ -8,7 +8,7 @@ import { expect } from "chai";
 // Merkle Tree
 import {
   phygitalCollectionJSONURL,
-  merkleRoot,
+  merkleTree,
   phygitalAssetLSP4MetadataJSONURL,
 } from "../test-util/phygital-collection";
 
@@ -24,7 +24,7 @@ describe("Validation", function () {
   async function deployFixture() {
     const [owner] = await ethers.getSigners();
 
-    const merkleRootOfCollection = merkleRoot;
+    const merkleRootOfCollection = merkleTree.root;
 
     const phygitalAssetName = "Sneaker";
     const phygitalAssetSymbol = "SNKR";
