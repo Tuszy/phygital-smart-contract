@@ -63,9 +63,7 @@ export const getVerificationDataForPhygital = (
     )
   ).serialized;
 
-  const merkleProof = merkleTree
-    .getProof(phygitalIndex)
-    .map((element) => getBytes(element));
+  const merkleProof = merkleTree.getProof(phygitalIndex);
 
   return {
     phygitalId,
