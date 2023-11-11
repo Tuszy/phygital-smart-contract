@@ -7,12 +7,13 @@ import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 // Lukso
+import {_INTERFACEID_LSP0} from "@lukso/lsp-smart-contracts/contracts/LSP0ERC725Account/LSP0Constants.sol";
 import {LSP8Enumerable} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Enumerable.sol";
 import {LSP8IdentifiableDigitalAsset} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol";
 import {LSP8IdentifiableDigitalAssetCore} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol";
 import {LSP8NotTokenOwner, LSP8TokenIdAlreadyMinted} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol";
 import {_LSP8_TOKENID_TYPE_UNIQUE_ID, _LSP8_TOKEN_METADATA_BASE_URI} from "@lukso/lsp-smart-contracts/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol";
-import {_LSP4_METADATA_KEY} from "@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol";
+import {_LSP4_METADATA_KEY, _LSP4_CREATORS_ARRAY_KEY, _LSP4_CREATORS_MAP_KEY_PREFIX} from "@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol";
 
 // Local
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
@@ -72,10 +73,19 @@ contract PhygitalAsset is LSP8Enumerable {
         )
     {
         merkleRootOfCollection = merkleRootOfCollection_;
+
         _setData(_PHYGITAL_ASSET_COLLECTION_URI_KEY, collectionJSONURL_);
+
         _setData(_LSP4_METADATA_KEY, metadataJSONURL_);
         _setData(_LSP4_TOKEN_TYPE_KEY, abi.encode(_LSP4_TOKEN_TYPE.COLLECTION));
+
         _setData(_LSP8_TOKEN_METADATA_BASE_URI, metadataBaseURI_);
+
+        // add collection owner to creators
+        _setData(_LSP4_CREATORS_ARRAY_KEY, bytes.concat(bytes16(uint128(1))));
+        _setData(bytes32(bytes.concat(bytes16(_LSP4_CREATORS_ARRAY_KEY), bytes16(uint128(0)))), bytes.concat(bytes20(collectionOwner_)));
+        _setData(bytes32(bytes.concat(_LSP4_CREATORS_MAP_KEY_PREFIX, bytes20(collectionOwner_))), bytes.concat(_INTERFACEID_LSP0, bytes16(uint128(0))));
+
         _setOwner(collectionOwner_);
     }
 

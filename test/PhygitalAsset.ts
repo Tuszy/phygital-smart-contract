@@ -1,4 +1,3 @@
-import { concat, toUtf8Bytes } from "ethers";
 // Crypto
 import { ethers } from "hardhat";
 
@@ -24,6 +23,7 @@ import { getUniversalProfiles } from "../test-util/universal-profile";
 import {
   ERC725YDataKeys,
   LSP8_TOKEN_ID_TYPES,
+  INTERFACE_IDS,
 } from "@lukso/lsp-smart-contracts";
 
 // see schemas/PhygitalAsset.json
@@ -147,6 +147,51 @@ describe("PhygitalAsset", function () {
 
       expect(await phygitalAsset.getData(LSP4TokenType)).to.equal(
         BigInt(LSP4TokenTypeCollection)
+      );
+    });
+
+    it("Should set the creators array length to 1", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(
+        await phygitalAsset.getData(
+          ERC725YDataKeys.LSP4["LSP4Creators[]"].length
+        )
+      ).to.equal(ethers.zeroPadValue(ethers.toBeHex(1), 16));
+    });
+
+    it("Should add the owner to the creators array", async function () {
+      const { phygitalAsset, collectionOwner } = await loadFixture(
+        deployFixture
+      );
+
+      expect(
+        await phygitalAsset.getData(
+          ethers.concat([
+            ERC725YDataKeys.LSP4["LSP4Creators[]"].index,
+            ethers.zeroPadValue(ethers.toBeHex(0), 16),
+          ])
+        )
+      ).to.equal(collectionOwner.universalProfileOwner.address.toLowerCase());
+    });
+
+    it("Should add the owner to the creators map", async function () {
+      const { phygitalAsset, collectionOwner } = await loadFixture(
+        deployFixture
+      );
+
+      expect(
+        await phygitalAsset.getData(
+          ethers.concat([
+            ERC725YDataKeys.LSP4.LSP4CreatorsMap,
+            collectionOwner.universalProfileOwner.address,
+          ])
+        )
+      ).to.equal(
+        ethers.concat([
+          INTERFACE_IDS.LSP0ERC725Account,
+          ethers.zeroPadValue(ethers.toBeHex(0), 16),
+        ])
       );
     });
 
