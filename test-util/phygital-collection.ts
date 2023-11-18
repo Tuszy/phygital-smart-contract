@@ -20,7 +20,7 @@ export const phygitalCollection = [
 ];
 
 export const phygitalCollectionIpfsURL =
-  "ipfs://QmXGywSvgx6SJkvR5CqHjTenFUzmm1gh4ASwWDSyQyFNdZ";
+  "ipfs://QmfJ5dHSCVEDxAmY3oArZtf8o71ALQv4dfWFin5ZKYgaYM";
 export const phygitalCollectionJSONURL = getLSP2JSONURL(
   phygitalCollection,
   phygitalCollectionIpfsURL
