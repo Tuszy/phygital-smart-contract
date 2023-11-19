@@ -1,5 +1,6 @@
 {
   "LSP4Metadata": {
+    "name": "Phygital",
     "description": "Phygital",
     "links": [
       {
@@ -15,17 +16,8 @@
         "url": "https://github.com/Tuszy/phygital"
       }
     ],
-    "icon": [
-      {
-        "width": 400,
-        "height": 400,
-        "verification": {
-          "method": "keccak256(bytes)",
-          "data": "0x6b3a0632917e88438de44d42a32115f6104b58f1cc025e00738debf2e65d5acb"
-        },
-        "url": "ipfs://QmTCqXeST1vFBjUW15f9zXJMJKSz9JcG5gi7wajxs8MGwK"
-      }
-    ],
+    "attributes": [],
+    "assets": [],
     "images": [
       [
         {

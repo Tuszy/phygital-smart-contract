@@ -29,7 +29,7 @@ export const phygitalCollectionJSONURL = getLSP2JSONURL(
 console.log("PHYGITAL COLLECTION", phygitalCollectionJSONURL);
 
 export const phygitalAssetLSP4MetadataIpfsURL =
-  "ipfs://QmS82aKeDijJtAkDAXGCbM1qMRVfhLdHhkwdUaaNdnwKsa";
+  "ipfs://QmNRCBoPYEwVv1UPXXuQZdSgSAML87UEoiMBB7jW3ixoN5";
 export const phygitalAssetLSP4MetadataJSONURL = getLSP2JSONURL(
   phygitalAssetLSP4Metadata,
   phygitalAssetLSP4MetadataIpfsURL
@@ -38,8 +38,8 @@ export const phygitalAssetLSP4MetadataJSONURL = getLSP2JSONURL(
 console.log("LSP4 METADATA", phygitalAssetLSP4MetadataJSONURL);
 
 export const phygitalAssetLSP8BaseURI = concat([
-  "0x00000000" ?? KECCAK_256_HASH_FUNCTION,
-  toUtf8Bytes("ipfs://QmPR9HgQoxAWD1BvgDKUMViyzhRX6JaFv4yPZJN6yWAcNV/"),
+  KECCAK_256_HASH_FUNCTION ?? "0x00000000",
+  toUtf8Bytes("ipfs://QmVMQDxmjAbXsvXrPsHdjbTgDJ9i5qQDD5fohPrfjkFmje/"),
 ]);
 
 export const createMerkleTree = (phygitalCollection: string[]) =>
