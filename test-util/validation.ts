@@ -15,7 +15,9 @@ import { INTERFACE_IDS } from "@lukso/lsp-smart-contracts";
 import { getInterfaceId } from "./util";
 
 // Interface Id
-const interfaceIdOfPhygitalAsset = getInterfaceId(PhygitalAssetInterface);
+export const interfaceIdOfPhygitalAsset = getInterfaceId(
+  PhygitalAssetInterface
+);
 console.log("PhygitalAsset ERC165 Interface ID:", interfaceIdOfPhygitalAsset);
 
 export function throwIfInvalidAddress(address: string) {

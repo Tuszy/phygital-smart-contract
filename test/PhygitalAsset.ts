@@ -26,6 +26,9 @@ import {
   INTERFACE_IDS,
 } from "@lukso/lsp-smart-contracts";
 
+// Interface Id
+import { interfaceIdOfPhygitalAsset } from "../test-util/validation";
+
 // see schemas/PhygitalAsset.json
 const PhygitalAssetCollectionURI =
   "0x4eff76d745d12fd5e5f7b38e8f396dd0d099124739e69a289ca1faa7ebc53768";
@@ -228,6 +231,32 @@ describe("PhygitalAsset", function () {
       expect(await phygitalAsset.owner()).to.equal(
         collectionOwner.universalProfileAddress
       );
+    });
+
+    it("Should support PhygitalAsset interface id", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(
+        await phygitalAsset.supportsInterface(interfaceIdOfPhygitalAsset)
+      ).to.equal(true);
+    });
+
+    it("Should support ERC725Y interface id", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(
+        await phygitalAsset.supportsInterface(INTERFACE_IDS.ERC725Y)
+      ).to.equal(true);
+    });
+
+    it("Should support LSP8 interface id", async function () {
+      const { phygitalAsset } = await loadFixture(deployFixture);
+
+      expect(
+        await phygitalAsset.supportsInterface(
+          INTERFACE_IDS.LSP8IdentifiableDigitalAsset
+        )
+      ).to.equal(true);
     });
   });
 
