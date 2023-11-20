@@ -360,16 +360,21 @@ describe("PhygitalAsset", function () {
       const { phygitalAsset, phygitalOwner } = await loadFixture(deployFixture);
 
       const phygitalAddress = phygitalCollection[0];
-      const { phygitalSignature, merkleProof } = getVerificationDataForPhygital(
-        phygitalAddress,
-        phygitalOwner.universalProfileOwner.address
-      );
+      const { phygitalSignature, merkleProof, phygitalId } =
+        getVerificationDataForPhygital(
+          phygitalAddress,
+          phygitalOwner.universalProfileOwner.address
+        );
 
       await expect(
         phygitalAsset
           .connect(phygitalOwner.universalProfileOwner)
           .mint(phygitalAddress, phygitalSignature, merkleProof, true)
       ).not.to.be.reverted;
+
+      expect(await phygitalAsset.totalSupply()).to.be.equal(1);
+
+      expect(await phygitalAsset.tokenAt(0)).to.be.equal(phygitalId);
     });
 
     it("Should pass if the phygital owner is a universal profile and force is set to true", async function () {
