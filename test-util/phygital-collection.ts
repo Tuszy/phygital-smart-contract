@@ -20,7 +20,7 @@ export const phygitalCollection = [
 ];
 
 export const phygitalCollectionIpfsURL =
-  "ipfs://QmfJ5dHSCVEDxAmY3oArZtf8o71ALQv4dfWFin5ZKYgaYM";
+  "ipfs://QmesGvXjvjocwhg1gkDVrBgBY7YJ3194oBBVL3ji69CakY";
 export const phygitalCollectionJSONURL = getLSP2JSONURL(
   phygitalCollection,
   phygitalCollectionIpfsURL
@@ -29,7 +29,7 @@ export const phygitalCollectionJSONURL = getLSP2JSONURL(
 console.log("PHYGITAL COLLECTION", phygitalCollectionJSONURL);
 
 export const phygitalAssetLSP4MetadataIpfsURL =
-  "ipfs://QmNRCBoPYEwVv1UPXXuQZdSgSAML87UEoiMBB7jW3ixoN5";
+  "ipfs://QmRUXyDvxT8LjqHKxc761sy4yeS2S1EiJwfy7wTEdPdVRL";
 export const phygitalAssetLSP4MetadataJSONURL = getLSP2JSONURL(
   phygitalAssetLSP4Metadata,
   phygitalAssetLSP4MetadataIpfsURL
@@ -39,7 +39,7 @@ console.log("LSP4 METADATA", phygitalAssetLSP4MetadataJSONURL);
 
 export const phygitalAssetLSP8BaseURI = concat([
   KECCAK_256_HASH_FUNCTION ?? "0x00000000",
-  toUtf8Bytes("ipfs://QmVMQDxmjAbXsvXrPsHdjbTgDJ9i5qQDD5fohPrfjkFmje/"),
+  toUtf8Bytes("ipfs://QmXx2XMk44hGF3gZbUnq263JqiH2DsUrJKmFCG1tU6T7ej/"),
 ]);
 
 export const createMerkleTree = (phygitalCollection: string[]) =>
