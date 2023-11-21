@@ -751,6 +751,55 @@ describe("PhygitalAsset", function () {
         );
       });
 
+      it("Should emit OwnershipVerified on successful verifyOwnershipAfter transfer call", async function () {
+        const { phygitalAsset, phygitalOwner, collectionOwner } =
+          await loadFixture(deployFixture);
+
+        const phygitalAddress = phygitalCollection[0];
+        const { phygitalId, phygitalSignature, merkleProof } =
+          getVerificationDataForPhygital(
+            phygitalAddress,
+            phygitalOwner.universalProfileAddress
+          );
+
+        await expect(
+          phygitalOwner.mint(
+            phygitalAddress,
+            phygitalSignature,
+            merkleProof,
+            false
+          )
+        ).not.to.be.reverted;
+
+        await expect(
+          phygitalOwner.transfer(
+            collectionOwner.universalProfileAddress,
+            phygitalId,
+            false
+          )
+        ).not.to.be.reverted;
+
+        expect(await phygitalAsset.verifiedOwnership(phygitalId)).to.equal(
+          false
+        );
+
+        const { phygitalSignature: phygitalSignature2 } =
+          getVerificationDataForPhygital(
+            phygitalAddress,
+            collectionOwner.universalProfileAddress,
+            Number(await phygitalAsset.nonce(phygitalId))
+          );
+
+        await expect(
+          collectionOwner.verifyOwnershipAfterTransfer(
+            phygitalAddress,
+            phygitalSignature2
+          )
+        )
+          .to.emit(phygitalAsset, "OwnershipVerified")
+          .withArgs(collectionOwner.universalProfileAddress, phygitalId);
+      });
+
       it("Should revert with the the custom error LSP8NotTokenOwner if the msg.sender is not the current phygital owner", async function () {
         const { phygitalAsset, phygitalOwner, collectionOwner } =
           await loadFixture(deployFixture);

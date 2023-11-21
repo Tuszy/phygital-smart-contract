@@ -16,6 +16,7 @@ import {_LSP8_TOKENID_TYPE_UNIQUE_ID, _LSP8_TOKEN_METADATA_BASE_URI} from "@luks
 import {_LSP4_METADATA_KEY, _LSP4_CREATORS_ARRAY_KEY, _LSP4_CREATORS_MAP_KEY_PREFIX} from "@lukso/lsp-smart-contracts/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol";
 
 // Local
+import {IPhygitalAsset} from "./IPhygitalAsset.sol";
 import {PhygitalAssetOwnershipVerificationFailed, PhygitalAssetIsNotPartOfCollection, PhygitalAssetHasAnUnverifiedOwnership, PhygitalAssetHasAlreadyAVerifiedOwnership} from "./PhygitalAssetError.sol";
 import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET, _LSP4_TOKEN_TYPE_KEY, _LSP4_TOKEN_TYPE} from "./PhygitalAssetConstants.sol";
 
@@ -24,37 +25,38 @@ import {_PHYGITAL_ASSET_COLLECTION_URI_KEY, _INTERFACEID_PHYGITAL_ASSET, _LSP4_T
  * A Phygital Asset is comprised of a specified amount of phygitals, whose addresses are forming the merkle tree to verify their validity/existence during minting (similar to a whitelist).
  * A phygital is represented by an asymmetric key pair (e.g. stored in a nfc tag or qr code).
  * The public key is called 'phygital address' and the private key is used to sign the abi.encoded(owner's address, nonce) to verify the ownership (during minting the nonce is equal to 0).
- * The 'phygital id' results from the keccak256 hash of the phygital address.
+ * The 'phygital id' results from the keccak256 hash of the phygital address. (Phygital Id == to Token Id)
  * @author Dennis Tuszynski
- * @dev Contract module represents a phygital asset.
+ * @dev Contract module represents an implementation of the PhygitalAsset interface IPhygitalAsset.
  */
-contract PhygitalAsset is LSP8Enumerable {
+contract PhygitalAsset is IPhygitalAsset, LSP8Enumerable {
     using ECDSA for bytes32;
     using MerkleProof for bytes32[];
+
     /**
-     * @notice The root of the merkle tree created from the collection
+     * @inheritdoc IPhygitalAsset
      */
     bytes32 public immutable merkleRootOfCollection;
 
     /**
-     * @notice Indicates whether the phygital ownership has been verified
+     * @inheritdoc IPhygitalAsset
      */
     mapping(bytes32 => bool) public verifiedOwnership;
 
     /**
-     * @notice Nonce is used to verify the ownership after a transfer. Increased with each transfer.
+     * @inheritdoc IPhygitalAsset
      */
     mapping(bytes32 => uint256) public nonce;
 
     /**
      * @notice Constructs a phygital asset
      *
-     * @param merkleRootOfCollection_ The root of the merkle tree
-     * @param collectionJSONURL_ The url pointing to the json containing the collection
-     * @param name_ The name of the phygital asset
-     * @param symbol_ The symbol of the phygital asset
-     * @param metadataBaseURI_ The metadata base uri for the phygitals
-     * @param collectionOwner_ The address of the collection owner
+     * @param merkleRootOfCollection_ The root of the merkle tree.
+     * @param collectionJSONURL_ The url pointing to the json containing the collection.
+     * @param name_ The name of the phygital asset.
+     * @param symbol_ The symbol of the phygital asset.
+     * @param metadataBaseURI_ The metadata base uri for the phygitals.
+     * @param collectionOwner_ The address of the collection owner.
      */
     constructor(
         bytes32 merkleRootOfCollection_,
@@ -81,32 +83,42 @@ contract PhygitalAsset is LSP8Enumerable {
 
         _setData(_LSP8_TOKEN_METADATA_BASE_URI, metadataBaseURI_);
 
-        // add collection owner to creators
         _setData(_LSP4_CREATORS_ARRAY_KEY, bytes.concat(bytes16(uint128(1))));
-        _setData(bytes32(bytes.concat(bytes16(_LSP4_CREATORS_ARRAY_KEY), bytes16(uint128(0)))), bytes.concat(bytes20(collectionOwner_)));
-        _setData(bytes32(bytes.concat(_LSP4_CREATORS_MAP_KEY_PREFIX, bytes20(collectionOwner_))), bytes.concat(_INTERFACEID_LSP0, bytes16(uint128(0))));
+        _setData(
+            bytes32(
+                bytes.concat(
+                    bytes16(_LSP4_CREATORS_ARRAY_KEY),
+                    bytes16(uint128(0))
+                )
+            ),
+            bytes.concat(bytes20(collectionOwner_))
+        );
+        _setData(
+            bytes32(
+                bytes.concat(
+                    _LSP4_CREATORS_MAP_KEY_PREFIX,
+                    bytes20(collectionOwner_)
+                )
+            ),
+            bytes.concat(_INTERFACEID_LSP0, bytes16(uint128(0)))
+        );
 
         _setOwner(collectionOwner_);
     }
 
     /**
-     * @notice Mints a phygital from the collection.
-     *
-     * @param phygitalAddress The address of the phygital to mint. (public key of nfc tag or qr code)
-     * @param phygitalSignature The signature to prove the ownership of the phygital. (= signed owner address)
-     * @param merkleProofOfCollection The merkle proof to check whether the phygital is part of the given collection.
-     * @param force Set to `false` to ensure minting for a recipient that implements LSP1, `false` otherwise for forcing the minting.
+     * @inheritdoc IPhygitalAsset
      */
     function mint(
         address phygitalAddress,
         bytes memory phygitalSignature,
         bytes32[] memory merkleProofOfCollection,
         bool force
-    ) public {
+    ) public virtual override {
         address phygitalOwner = msg.sender;
         bytes32 phygitalId = keccak256(abi.encode(phygitalAddress));
 
-        if(nonce[phygitalId] > 0) revert LSP8TokenIdAlreadyMinted(phygitalId);
+        if (nonce[phygitalId] > 0) revert LSP8TokenIdAlreadyMinted(phygitalId);
 
         if (
             !_verifyPhygitalOwnership(
@@ -120,15 +132,8 @@ contract PhygitalAsset is LSP8Enumerable {
                 phygitalId
             );
         }
-        if (
-            !_isPhygitalPartOfCollection(
-                merkleProofOfCollection,
-                phygitalId
-            )
-        ) {
-            revert PhygitalAssetIsNotPartOfCollection(
-                phygitalId
-            );
+        if (!_isPhygitalPartOfCollection(merkleProofOfCollection, phygitalId)) {
+            revert PhygitalAssetIsNotPartOfCollection(phygitalId);
         }
 
         verifiedOwnership[phygitalId] = true;
@@ -137,17 +142,14 @@ contract PhygitalAsset is LSP8Enumerable {
     }
 
     /**
-     * @notice Tries to verify the ownership of the phygital after a transfer - on success updates the verifiedOwnership field with true.
-     *
-     * @param phygitalAddress The address of the phygital (public key of nfc tag or qr code)
-     * @param phygitalSignature The signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital)
+     * @inheritdoc IPhygitalAsset
      */
     function verifyOwnershipAfterTransfer(
         address phygitalAddress,
         bytes memory phygitalSignature
-    ) public {
+    ) public virtual override {
         bytes32 phygitalId = keccak256(abi.encode(phygitalAddress));
-        
+
         if (msg.sender != tokenOwnerOf(phygitalId)) {
             revert LSP8NotTokenOwner(
                 tokenOwnerOf(phygitalId),
@@ -179,20 +181,23 @@ contract PhygitalAsset is LSP8Enumerable {
         }
 
         verifiedOwnership[phygitalId] = true;
+
+        emit OwnershipVerified(phygitalOwner, phygitalId);
     }
 
     /**
-     * @notice Verifies the ownership of the phygital by recovering the signer from the signature
+     * @dev Verifies the ownership of the phygital by recovering the signer from the signature.
      *
-     * @param phygitalOwner The address of the phygital owner
-     * @param phygitalId The id of the phygital (keccak256 hashed public key of nfc tag or qr code)
-     * @param phygitalSignature The signature of the phygital (signed payload is the hashed address of the minter/owner of the phygital and the current nonce)
-          */
+     * @param phygitalOwner The address of the phygital owner. (public key of nfc tag or qr code)
+     * @param phygitalId The id of the phygital. (keccak256 hashed public key of nfc tag or qr code)
+     * @param phygitalSignature The signature of the phygital to prove the ownership of the phygital. (= signed `phygitalOwner` with current nonce `x`)
+     * @return The verification result (true if recovered address equals to passed `phygitalOwner` otherwise false)
+     */
     function _verifyPhygitalOwnership(
         address phygitalOwner,
         bytes32 phygitalId,
         bytes memory phygitalSignature
-    ) public view returns (bool) {       
+    ) internal view virtual returns (bool) {
         bytes32 hashedPhygitalOwnerAddress = keccak256(
             abi.encodePacked(phygitalOwner, nonce[phygitalId])
         );
@@ -211,32 +216,37 @@ contract PhygitalAsset is LSP8Enumerable {
     }
 
     /**
-     * @notice Checks if the given phygital is part of the collection
+     * @dev Checks if the given phygital is part of the merkle tree (= based on the collection).
      *
-     * @param merkleProofOfCollection The merkle proof for the phygital in the merkle tree
-     * @param phygitalId The id of the phygital (keccak256 hashed public key of nfc tag or qr code)
+     * @param merkleProofOfCollection The merkle proof for the phygital in the merkle tree.
+     * @param phygitalId The id of the phygital. (keccak256 hashed public key of nfc tag or qr code)
+     * @return The existence state of the phygital in the collection. (true if it is part of the merkle tree otherwise falls)
      */
     function _isPhygitalPartOfCollection(
         bytes32[] memory merkleProofOfCollection,
         bytes32 phygitalId
-    ) public view returns (bool) {
-        return merkleProofOfCollection.verify(merkleRootOfCollection, keccak256(bytes.concat(phygitalId)));
+    ) internal view virtual returns (bool) {
+        return
+            merkleProofOfCollection.verify(
+                merkleRootOfCollection,
+                keccak256(bytes.concat(phygitalId))
+            );
     }
 
     /**
-     * @notice Checks if the ownership is verified, if not then the transfer is reverted unless the phygitalOwner address is zero (during minting)
+     * @dev Checks if the ownership is verified, if not then the transfer is reverted unless the `phygitalOwner` address is zero (during minting)
      *
-     * @param phygitalOwner The current owner address
-     * @param newPhygitalOwner The new owner address
-     * @param phygitalId The phygital id
-     * @param data Custom data (unused)
+     * @param phygitalOwner The current owner address.
+     * @param newPhygitalOwner The new owner address.
+     * @param phygitalId The phygital id. (= tokenId)
+     * @param data Custom data. (unused)
      */
     function _beforeTokenTransfer(
         address phygitalOwner,
         address newPhygitalOwner,
         bytes32 phygitalId,
         bytes memory data
-    ) internal override(LSP8Enumerable) {
+    ) internal virtual override(LSP8Enumerable) {
         if (phygitalOwner != address(0) && !verifiedOwnership[phygitalId]) {
             revert PhygitalAssetHasAnUnverifiedOwnership(
                 phygitalOwner,
@@ -253,23 +263,24 @@ contract PhygitalAsset is LSP8Enumerable {
     }
 
     /**
-     * @notice Eithers sets the 'verified ownership' status to true if the phygitalOwner address is zero (during minting) or to false if it is a transfer.
+     * @dev Increases the nonce by one and either updates the 'verifiedOwnership' field for the phygital id to`true`
+     *      if the `phygitalOwner` address is zero (during minting) or to `false` if it is a transfer.
      *
-     * @param phygitalOwner The current owner address
-     * @param newPhygitalOwner The new owner address
-     * @param phygitalId The phygital id
-     * @param data Custom data (unused)
+     * @param phygitalOwner The current owner address.
+     * @param newPhygitalOwner The new owner address.
+     * @param phygitalId The phygital id. (= tokenId)
+     * @param data Custom data. (unused)
      */
     function _afterTokenTransfer(
         address phygitalOwner,
         address newPhygitalOwner,
         bytes32 phygitalId,
         bytes memory data
-    ) internal override(LSP8IdentifiableDigitalAssetCore) {
+    ) internal virtual override(LSP8IdentifiableDigitalAssetCore) {
         if (phygitalOwner != address(0)) {
             verifiedOwnership[phygitalId] = false;
             nonce[phygitalId] = nonce[phygitalId] + 1;
-        }else{
+        } else {
             nonce[phygitalId] = 1;
         }
         super._afterTokenTransfer(
@@ -289,7 +300,7 @@ contract PhygitalAsset is LSP8Enumerable {
         public
         view
         virtual
-        override(LSP8IdentifiableDigitalAsset)
+        override(IERC165, LSP8IdentifiableDigitalAsset)
         returns (bool)
     {
         return
