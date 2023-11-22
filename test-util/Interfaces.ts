@@ -11,3 +11,5 @@ export const LSP0ERC725AccountABIInterface = new Interface(
 );
 export const LSP6KeyManagerInterface = new Interface(LSP6KeyManagerABI);
 export const PhygitalAssetInterface = new Interface(PhygitalAssetABI);
+
+export const INTERFACE_ID_OF_PHYGITAL_ASSET = "0xae8205e1";
