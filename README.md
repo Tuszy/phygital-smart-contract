@@ -11,7 +11,7 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
   - The **Phygital Id** results from the *keccak256* hash of the abi-encoded *phygital address* (= LSP8 token id of type *hash*)
   - The *verified ownership status* indicates whether the currently assigned owner has verified the ownership of the phygital. This is only possible if he/she is in possession of the physical part of the phygital, since they need the private key of the phygital to sign their own universal profile address and the current nonce to prove real ownership. During minting, the status is set to true, but changes to false after each transfer. So that the new owner must verify the ownership to turn it back to true.
 
-## Manual
+## Raw interaction without the [Backend](https://github.com/Tuszy/phygital-backend)
 ### Steps to create **PhygitalAsset**
    1. Upload LSP4 metadata for collection to IPFS and create LSP2 JSONURL
    2. Upload LSP4 metadata and image directories which contain the data for the phygitals to IPFS and create the base uri
