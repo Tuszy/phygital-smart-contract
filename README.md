@@ -13,11 +13,12 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
 
 ## Manual
 ### Steps to create **PhygitalAsset**
-   1. Upload LSP4 metadata to IPFS and create LSP2 JSONURL
-   2. Compile list of phygital addresses (= phygital collection)
-   3. Upload the collection to IPFS and create a LSP2 JSONURL
-   4. Calculate the merkle root for the collection
-   5. Deploy PhygitalAsset contract instance with the prepared data
+   1. Upload LSP4 metadata for collection to IPFS and create LSP2 JSONURL
+   2. Upload LSP4 metadata and image directories which contain the data for the phygitals to IPFS and create the base uri
+   3. Compile list of phygital addresses (= phygital collection)
+   4. Upload the collection to IPFS and create a LSP2 JSONURL
+   5. Calculate the merkle root for the collection
+   6. Deploy PhygitalAsset contract instance with the prepared data
 
 ### Steps to mint **PhygitalAsset**
    1. Retrieve phygital address (e.g. from NFC tag or QR code)
