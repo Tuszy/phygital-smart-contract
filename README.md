@@ -9,7 +9,7 @@ The **[PhygitalAsset](https://github.com/Tuszy/phygital-smart-contract/blob/main
   - The *public key* is called **Phygital address**
   - The *private key* is used to sign the **Phygital Owner** (= owner's universal profile address) concatenated with a **Nonce** to verify the ownership, e.g. during minting and after transfers
   - The **Phygital Id** results from the *keccak256* hash of the abi-encoded *phygital address* (= LSP8 token id of type *hash*)
-  - The *verified ownership status* indicates whether the currently assigned owner has verified the ownership of the phygital. This is only possible if he/she is in possession of the phygital, since they need the private key of the phygital to sign their own universal profile address and the current nonce to prove real ownership. During minting, the status is set to true, but changes to false after each transfer. So that the new owner must verify the ownership to turn it back to true.
+  - The *verified ownership status* indicates whether the currently assigned owner has verified the ownership of the phygital. This is only possible if he/she is in possession of the physical part of the phygital, since they need the private key of the phygital to sign their own universal profile address and the current nonce to prove real ownership. During minting, the status is set to true, but changes to false after each transfer. So that the new owner must verify the ownership to turn it back to true.
 
 ## Manual
 ### Steps to create **PhygitalAsset**
