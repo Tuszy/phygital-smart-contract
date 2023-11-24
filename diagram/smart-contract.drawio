@@ -1,0 +1,379 @@
+<mxfile host="app.diagrams.net" modified="2023-11-24T12:19:47.322Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" etag="JYG_XADsB02jNOE2CdBo" version="22.1.3" type="device">
+  <diagram name="Seite-1" id="hL67K7F37erUZlTw7a-i">
+    <mxGraphModel dx="1797" dy="2143" grid="0" gridSize="10" guides="0" tooltips="1" connect="0" arrows="0" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p41ejv3hFufA00dVzd63-99" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=9;" vertex="1" parent="1">
+          <mxGeometry x="47" y="3" width="1115" height="808" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-1" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;b&gt;&lt;br&gt;&lt;font color=&quot;#cc6600&quot;&gt;PhygitalAsset&lt;br&gt;Contract&lt;br&gt;&lt;/font&gt;&lt;/b&gt;&lt;/font&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=28;strokeWidth=5;strokeColor=#CC6600;" vertex="1" parent="1">
+          <mxGeometry x="167" y="294" width="149" height="181" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-8" value="Merkle Tree of Phygital Collection" style="swimlane;startSize=28;horizontal=1;containerType=tree;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=5;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="532" y="81" width="563" height="616" as="geometry">
+            <mxRectangle x="260" y="316" width="86" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-9" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8" source="p41ejv3hFufA00dVzd63-11" target="p41ejv3hFufA00dVzd63-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-10" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8" source="p41ejv3hFufA00dVzd63-11" target="p41ejv3hFufA00dVzd63-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-71" value="KECCAK256" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-10">
+          <mxGeometry x="-0.7688" y="-1" relative="1" as="geometry">
+            <mxPoint x="-1" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="Hash(1,2)" treeRoot="1" id="p41ejv3hFufA00dVzd63-11">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+            <mxGeometry x="81" y="168" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="p41ejv3hFufA00dVzd63-12" value="1. Phygital Id" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="21" y="268" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-13" value="2. Phygital Id" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="161" y="268" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-20" value="1. Public Key of Phygital NFC Tag&lt;br&gt;(Phygital Address)" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="22" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-21" value="2. Public Key of Phygital NFC Tag&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;(Phygital Address)" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="163" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-22" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.507;exitY=0.002;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8" source="p41ejv3hFufA00dVzd63-20" target="p41ejv3hFufA00dVzd63-12">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="79" y="374" as="sourcePoint" />
+            <mxPoint x="129" y="324" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-68" value="KECCAK256" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-22">
+          <mxGeometry x="0.164" y="-2" relative="1" as="geometry">
+            <mxPoint x="-2" y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-23" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.507;exitY=0.002;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="215" y="391" as="sourcePoint" />
+            <mxPoint x="215" y="329" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-69" value="KECCAK256" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-23">
+          <mxGeometry x="0.2258" y="3" relative="1" as="geometry">
+            <mxPoint y="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="Hash(3,4)" treeRoot="1" id="p41ejv3hFufA00dVzd63-26">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+            <mxGeometry x="356" y="168" width="120" height="60" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="p41ejv3hFufA00dVzd63-27" value="3. Phygital Id" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="296" y="268" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-24" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8" source="p41ejv3hFufA00dVzd63-26" target="p41ejv3hFufA00dVzd63-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-28" value="3. Phygital Id" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="436" y="268" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-25" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8" source="p41ejv3hFufA00dVzd63-26" target="p41ejv3hFufA00dVzd63-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-72" value="KECCAK256" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-25">
+          <mxGeometry x="-0.6961" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-29" value="3. Public Key of Phygital NFC Tag&lt;br&gt;(Phygital Address)" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="297" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-30" value="4. Public Key of Phygital NFC Tag&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;(Phygital Address)" style="whiteSpace=wrap;html=1;align=center;verticalAlign=middle;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="437" y="390" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-31" value="KECCAK256" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.507;exitY=0.002;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8" source="p41ejv3hFufA00dVzd63-29" target="p41ejv3hFufA00dVzd63-27">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="354" y="374" as="sourcePoint" />
+            <mxPoint x="404" y="324" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-32" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.507;exitY=0.002;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="490" y="391" as="sourcePoint" />
+            <mxPoint x="490" y="329" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-70" value="KECCAK256" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-32">
+          <mxGeometry x="0.129" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <UserObject label="&lt;font color=&quot;#ff6666&quot;&gt;Merkle Root of&lt;br&gt;Phygital Collection&lt;br&gt;&lt;br&gt;Hash(Hash(1,2), Hash(3,4))&lt;/font&gt;" treeRoot="1" id="p41ejv3hFufA00dVzd63-33">
+          <mxCell style="whiteSpace=wrap;html=1;align=center;treeFolding=1;treeMoving=1;newEdgeStyle={&quot;edgeStyle&quot;:&quot;elbowEdgeStyle&quot;,&quot;startArrow&quot;:&quot;none&quot;,&quot;endArrow&quot;:&quot;none&quot;};strokeWidth=3;strokeColor=#FF6666;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+            <mxGeometry x="193" y="37" width="176" height="83" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="p41ejv3hFufA00dVzd63-34" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="284" y="122" as="sourcePoint" />
+            <mxPoint x="142" y="168" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-35" value="" style="edgeStyle=elbowEdgeStyle;elbow=vertical;sourcePerimeterSpacing=0;targetPerimeterSpacing=0;startArrow=none;endArrow=none;rounded=0;curved=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="284" y="121" as="sourcePoint" />
+            <mxPoint x="415" y="168" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="349" y="145" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-61" value="" style="group;strokeWidth=3;perimeterSpacing=1;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="441" y="493" width="106" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-62" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="p41ejv3hFufA00dVzd63-61">
+          <mxGeometry width="104.00000000000001" height="104.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-63" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Public Key&lt;/font&gt;" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.key_permissions" vertex="1" parent="p41ejv3hFufA00dVzd63-61">
+          <mxGeometry x="11" y="57" width="13.12" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-64" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Private Key&lt;/font&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Key.svg;" vertex="1" parent="p41ejv3hFufA00dVzd63-61">
+          <mxGeometry x="75" y="57" width="15.65" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-65" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/smartphone-signal-5g-trading/64/Smartphone_NFC-128.png" vertex="1" parent="p41ejv3hFufA00dVzd63-61">
+          <mxGeometry x="34.87741935483871" y="28.85161290322581" width="32.20645161290323" height="32.20645161290323" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-66" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;1. Phygital NFC Tag&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="p41ejv3hFufA00dVzd63-61">
+          <mxGeometry x="1" y="2.68" width="101" height="20.13" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-67" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="491" y="493" as="sourcePoint" />
+            <mxPoint x="491" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-76" value="Read Public Key" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-67">
+          <mxGeometry x="0.0233" y="2" relative="1" as="geometry">
+            <mxPoint y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-53" value="" style="group;strokeWidth=3;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="298" y="493" width="106" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-54" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="p41ejv3hFufA00dVzd63-53">
+          <mxGeometry width="104.00000000000001" height="104.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-55" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Public Key&lt;/font&gt;" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.key_permissions" vertex="1" parent="p41ejv3hFufA00dVzd63-53">
+          <mxGeometry x="11" y="57" width="13.12" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-56" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Private Key&lt;/font&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Key.svg;" vertex="1" parent="p41ejv3hFufA00dVzd63-53">
+          <mxGeometry x="75" y="57" width="15.65" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-57" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/smartphone-signal-5g-trading/64/Smartphone_NFC-128.png" vertex="1" parent="p41ejv3hFufA00dVzd63-53">
+          <mxGeometry x="34.87741935483871" y="28.85161290322581" width="32.20645161290323" height="32.20645161290323" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-58" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;1. Phygital NFC Tag&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="p41ejv3hFufA00dVzd63-53">
+          <mxGeometry x="1" y="2.68" width="101" height="20.13" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-59" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="348" y="493" as="sourcePoint" />
+            <mxPoint x="348" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-75" value="Read Public Key" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-59">
+          <mxGeometry x="0.0698" relative="1" as="geometry">
+            <mxPoint x="1" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-45" value="" style="group;strokeWidth=3;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="163" y="493" width="106" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-46" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="p41ejv3hFufA00dVzd63-45">
+          <mxGeometry width="104.00000000000001" height="104.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-47" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Public Key&lt;/font&gt;" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.key_permissions" vertex="1" parent="p41ejv3hFufA00dVzd63-45">
+          <mxGeometry x="11" y="57" width="13.12" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-48" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Private Key&lt;/font&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Key.svg;" vertex="1" parent="p41ejv3hFufA00dVzd63-45">
+          <mxGeometry x="75" y="57" width="15.65" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-49" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/smartphone-signal-5g-trading/64/Smartphone_NFC-128.png" vertex="1" parent="p41ejv3hFufA00dVzd63-45">
+          <mxGeometry x="34.87741935483871" y="28.85161290322581" width="32.20645161290323" height="32.20645161290323" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-50" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;1. Phygital NFC Tag&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="p41ejv3hFufA00dVzd63-45">
+          <mxGeometry x="1" y="2.68" width="101" height="20.13" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-51" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="213" y="493" as="sourcePoint" />
+            <mxPoint x="213" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-74" value="Read Public Key" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-51">
+          <mxGeometry x="0.0698" relative="1" as="geometry">
+            <mxPoint x="-1" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-7" value="" style="group;strokeWidth=3;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="20" y="493" width="106" height="104" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-2" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="p41ejv3hFufA00dVzd63-7">
+          <mxGeometry width="104.00000000000001" height="104.00000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-3" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Public Key&lt;/font&gt;" style="sketch=0;aspect=fixed;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;align=center;fillColor=#00188D;shape=mxgraph.mscae.enterprise.key_permissions" vertex="1" parent="p41ejv3hFufA00dVzd63-7">
+          <mxGeometry x="11" y="57" width="13.12" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-4" value="&lt;font style=&quot;font-size: 7px;&quot;&gt;Private Key&lt;/font&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Key.svg;" vertex="1" parent="p41ejv3hFufA00dVzd63-7">
+          <mxGeometry x="75" y="57" width="15.65" height="25.24" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-5" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/smartphone-signal-5g-trading/64/Smartphone_NFC-128.png" vertex="1" parent="p41ejv3hFufA00dVzd63-7">
+          <mxGeometry x="34.87741935483871" y="28.85161290322581" width="32.20645161290323" height="32.20645161290323" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-6" value="&lt;font style=&quot;font-size: 11px;&quot;&gt;1. Phygital NFC Tag&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="p41ejv3hFufA00dVzd63-7">
+          <mxGeometry x="1" y="2.68" width="101" height="20.13" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-42" value="" style="endArrow=none;html=1;rounded=0;entryX=0.517;entryY=1.001;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=3;" edge="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="70" y="493" as="sourcePoint" />
+            <mxPoint x="70" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-73" value="Read Public Key" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-42">
+          <mxGeometry x="0.0698" y="3" relative="1" as="geometry">
+            <mxPoint x="1" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-81" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=5;strokeColor=#2B95FF;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="12" y="382" width="536" height="77" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-101" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeWidth=5;strokeColor=#FF66FF;" vertex="1" parent="p41ejv3hFufA00dVzd63-8">
+          <mxGeometry x="12" y="260" width="536" height="77" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-79" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.005;entryY=0.483;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.987;exitY=0.294;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=4;strokeColor=#CC6600;" edge="1" parent="1" source="p41ejv3hFufA00dVzd63-1" target="p41ejv3hFufA00dVzd63-33">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="328" y="388" as="sourcePoint" />
+            <mxPoint x="357" y="351" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-80" value="Stores merkle root&lt;br&gt;to check during mint&lt;br&gt;if a phygital is part&lt;br&gt;of the collection&lt;br&gt;(&quot;whitelisting&quot;)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=16;labelBorderColor=#CC6600;fontColor=#CC6600;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-79">
+          <mxGeometry x="-0.2863" y="2" relative="1" as="geometry">
+            <mxPoint x="-17" y="-9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-82" value="&lt;font style=&quot;font-size: 24px;&quot; color=&quot;#2b95ff&quot;&gt;IPFS&lt;/font&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;strokeColor=#2B95FF;strokeWidth=7;" vertex="1" parent="1">
+          <mxGeometry x="198" y="565" width="124" height="161" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-83" value="" style="endArrow=classic;html=1;rounded=0;entryX=1.025;entryY=0.472;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.552;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=4;strokeColor=#2B95FF;" edge="1" parent="1" source="p41ejv3hFufA00dVzd63-81" target="p41ejv3hFufA00dVzd63-82">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="639" y="495" as="sourcePoint" />
+            <mxPoint x="689" y="445" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-84" value="Stored as JSON list" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2B95FF;fontSize=16;labelBorderColor=#2B95FF;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-83">
+          <mxGeometry x="-0.4565" y="2" relative="1" as="geometry">
+            <mxPoint x="-55" y="21" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-87" value="" style="endArrow=classic;html=1;rounded=0;exitX=-0.001;exitY=0.561;exitDx=0;exitDy=0;exitPerimeter=0;strokeWidth=4;strokeColor=#2B95FF;entryX=1.003;entryY=0.788;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="p41ejv3hFufA00dVzd63-81" target="p41ejv3hFufA00dVzd63-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="534" y="398" as="sourcePoint" />
+            <mxPoint x="319" y="429" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-88" value="referenced as collection" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#2B95FF;fontSize=16;labelBorderColor=#2B95FF;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-87">
+          <mxGeometry x="-0.4565" y="2" relative="1" as="geometry">
+            <mxPoint x="-49" y="-24" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-90" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=4;strokeColor=#CC6600;exitX=-0.005;exitY=0.459;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="p41ejv3hFufA00dVzd63-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="171" y="380" as="sourcePoint" />
+            <mxPoint x="1029" y="679" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="96" y="378" />
+              <mxPoint x="96" y="768" />
+              <mxPoint x="1029" y="756" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-92" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.481;entryY=1.014;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=4;strokeColor=#CC6600;exitX=-0.005;exitY=0.459;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="167" y="377" as="sourcePoint" />
+            <mxPoint x="603" y="679" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="97" y="378" />
+              <mxPoint x="97" y="768" />
+              <mxPoint x="603" y="762" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-93" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=4;strokeColor=#CC6600;exitX=-0.005;exitY=0.459;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="167" y="377" as="sourcePoint" />
+            <mxPoint x="885" y="679" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="97" y="378" />
+              <mxPoint x="97" y="768" />
+              <mxPoint x="885" y="758" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-94" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.512;entryY=1.019;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=4;strokeColor=#CC6600;exitX=-0.005;exitY=0.459;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" target="p41ejv3hFufA00dVzd63-46">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="166" y="377" as="sourcePoint" />
+            <mxPoint x="602" y="679" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="96" y="378" />
+              <mxPoint x="96" y="768" />
+              <mxPoint x="748" y="760" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-95" value="Validates signatures during mint and ownership verification&lt;br&gt;(Owner must sign Universal Profile address and current Phygital nonce with the private key)" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#CC6600;labelBorderColor=#CC6600;fontSize=16;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-94">
+          <mxGeometry x="0.0233" y="1" relative="1" as="geometry">
+            <mxPoint x="298" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-96" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;&lt;b&gt;&lt;font color=&quot;#00ff00&quot;&gt;LSP8&lt;br&gt;Enumerable&lt;/font&gt;&lt;br&gt;&lt;/b&gt;&lt;/font&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=28;strokeWidth=5;strokeColor=#00FF00;" vertex="1" parent="1">
+          <mxGeometry x="168" y="36" width="149" height="181" as="geometry" />
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-97" value="" style="endArrow=classic;startArrow=none;html=1;rounded=0;entryX=0.46;entryY=1.006;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.474;exitY=-0.01;exitDx=0;exitDy=0;exitPerimeter=0;startFill=0;strokeWidth=3;strokeColor=#CC6600;" edge="1" parent="1" source="p41ejv3hFufA00dVzd63-1" target="p41ejv3hFufA00dVzd63-96">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="610" y="371" as="sourcePoint" />
+            <mxPoint x="660" y="321" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-98" value="Inherits" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#CC6600;labelBorderColor=#CC6600;fontSize=16;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-97">
+          <mxGeometry x="0.3684" y="3" relative="1" as="geometry">
+            <mxPoint x="2" y="17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-102" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=4;strokeColor=#FF66FF;exitX=0.002;exitY=0.529;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="p41ejv3hFufA00dVzd63-101">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="382" as="sourcePoint" />
+            <mxPoint x="320" y="395" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-103" value="used as LSP8 token ids" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontColor=#FF66FF;fontSize=16;labelBorderColor=#FF66FF;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-102">
+          <mxGeometry x="-0.4565" y="2" relative="1" as="geometry">
+            <mxPoint x="-48" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-104" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.507;entryY=-0.007;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=4;strokeColor=#CC6600;" edge="1" parent="1" target="p41ejv3hFufA00dVzd63-82">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="237" y="476" as="sourcePoint" />
+            <mxPoint x="736" y="168" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p41ejv3hFufA00dVzd63-105" value="references Phygital Collection, &lt;br&gt;images, base uri and metadata" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=16;labelBorderColor=#CC6600;fontColor=#CC6600;" vertex="1" connectable="0" parent="p41ejv3hFufA00dVzd63-104">
+          <mxGeometry x="-0.2863" y="2" relative="1" as="geometry">
+            <mxPoint y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
